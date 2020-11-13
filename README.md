@@ -1,3 +1,11 @@
+## Team D Assignment 3 IMK
+
+- Farhan Herdian P (1313618030)
+
+- Aldian Asmara (1313618032)
+
+- Tantyo Nurwahyu T (1313618004)
+
 # SIPEMA / Sistem Informasi Pengajian Musholla Al-Ikhlas
 
 ![](diagram/UI%20Flow%20Sipema.png)
