@@ -8,10 +8,6 @@
 
 # SIPEMA / Sistem Informasi Pengajian Musholla Al-Ikhlas
 
-![](diagram/UI%20Flow%20Sipema.png)
-
-## Penjelasan Singkat
-
 SIPEMA adalah sistem informasi berbasis website yang diperuntukan untuk guru dan murid yang tergabung ke dalam sebuah pengajian di Musholla Al-Ikhlas. 
 
 ## Tujuan
@@ -45,6 +41,20 @@ SIPEMA menawarkan beberapa fitur yang dapat dimanfaatkan berdasarkan peran yang 
 - Melihat catatan bacaan pribadi: Murid dapat melihat catatan bacaan quran atau iqra yang sudah ia baca, catatan yang dimaksud adalah catatan yang dibuat Guru ketika Murid sudah menyelesaikan bacaan quran/iqra pada sebuah pertemuan pengajian
 
 - Melihat catatan pembayaran pribadi: Murid dapat melihat catatan pembayaran yang dimasukan oleh Guru ketika Murid sudah melakukan bayaran pengajian
+
+## Desain Kontrol
+
+### Guru
+
+![](diagram/UI%20Flow%20Guru.png)
+
+### Murid
+
+![](diagram/UI%20Flow%20Murid.png)
+
+### Murid yang belum disetujui
+
+![](diagram/UI%20Flow%20Murid-yang-belum-diterima.png)
 
 ## Use Case
 
