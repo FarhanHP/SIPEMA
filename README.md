@@ -14,7 +14,7 @@ SIPEMA adalah sistem informasi berbasis website yang diperuntukan untuk guru dan
 
 Tujuan dibuatnya SIPEMA adalah membantu pengajian Musholla Al-Ikhlas dalam melaksanakan kegiatannya. SIPEMA juga bertujuan meningkatkan transparansi, efektifitas dan akuntabilitas pengajian bagi guru dan murid. Selain itu, SIPEMA juga memungkinkan orang tua murid untuk memantau perkembangan anaknya di pengajian. 
 
-## Fitur dan Cara Kerja
+## Fitur
 
 SIPEMA menawarkan beberapa fitur yang dapat dimanfaatkan berdasarkan peran yang dimiliki akun yakni, Guru atau Murid.
 
