@@ -80,11 +80,22 @@ def register(token):
         return Response(status=401)
 
       else:
+        _id = ObjectId()
+
+        created = time.time()
+
         db["user"].insert_one({
+          "_id" : _id,
           "email" : registerToken["email"],
           "password" : registerToken["password"],
           "fullname" : registerToken["fullname"],
-          "created" : time.time()
+          "created" : created
+        })
+
+        db["student"].insert_one({
+          "user_id" : _id,
+          "approved" : False,
+          "created" : created
         })
 
         return Response(status=200)
