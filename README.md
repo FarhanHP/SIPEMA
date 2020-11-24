@@ -62,6 +62,10 @@ Fitur fitur yang sudah dijelaskan sebelumnya dapat digambarkan pada diagram usec
 
 ![](diagram/SIPEMA%20Usecase.png)
 
+## ERD
+
+![](diagram/SIPEMA%20ERD.png)
+
 ## Mini Report phase 1
 
 Mini report phase 1 dapat dilihat di sini: [Link](https://github.com/FarhanHP/Tugas-Interaksi-Manusia-dan-Komputer-113/tree/hw3)
