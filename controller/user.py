@@ -9,6 +9,56 @@ from email_auto import sendEmail
 
 userController = Blueprint("userController", __name__)
 
+@userController.route("/login", methods=["POST"])
+def login():
+  try:
+    data = request.get_json()
+
+    email = data["email"]
+
+    password = data["password"]
+
+    db = get_db()
+
+    user = db["user"].find_one({"email" : email})
+
+    if(user is None):
+      return Response(status=404)
+
+    else:
+      if(check_password_hash(user["password"], password)):
+        token = secrets.token_hex(32)
+
+        userId = user["_id"]
+
+        created = time.time()
+
+        expire = created + tokenExpire
+
+        #only one login token for one user allowed
+        db["token"].delete_many({
+          "user_id" : userId
+        })
+
+        db["token"].insert_one({
+          "token" : token,
+          "user_id" : userId,
+          "created" : created,
+          "expire" : expire
+        })
+
+        return {
+          "token" : token
+        }
+
+      else:
+        return Response(status=401)
+
+  except Exception as e:
+    print(e)
+
+    return Response(status=500)
+
 @userController.route("/register/request", methods=["POST"])
 def registerRequest():
   try:
@@ -49,7 +99,7 @@ def registerRequest():
       "token" : token
     })
 
-    sendEmail(email, "Pendaftaran SIPEMA", f"Halo, {fullname}.\n\nSelangkah lagi untuk bergabung ke SIPEMA dengan klik tautan di bawah ini untuk mengkonfirmasi email anda:\n\nhttps://sipema.herokuapp.com/register/token/{token}\n\nSalam hangat.\n\nTim SIPEMA")
+    sendEmail(email, "Pendaftaran SIPEMA", f"Halo, {fullname}.\n\nSelangkah lagi untuk bergabung ke SIPEMA dengan klik tautan di bawah ini untuk mengkonfirmasi email anda:\n\nhttps://sipema.herokuapp.com/register/token/{token}\n\nSalam hangat.\n\n-Tim SIPEMA")
 
     return Response(status=200)
 
@@ -107,3 +157,120 @@ def register(token):
     print(e)
 
     return Response(response=e, status=500)
+
+@userController.route("/password/reset", methods=["POST"])
+def resetPasswordRequest():
+  try:
+    data = request.get_json()
+
+    email = data["email"]
+
+    db = get_db()
+
+    user = db["user"].find_one({
+      "email" : email
+    })
+
+    if(user is not None):
+      userId = user["_id"]
+
+      fullname = user["fullname"]
+
+      #delete duplicate
+      db["reset_password_token"].delete_many({
+        "user_id" : userId
+      })
+
+      token = secrets.token_hex(32)
+
+      created = time.time()
+
+      expire = created + tokenExpire
+
+      db["reset_password_token"].insert_one({
+        "user_id" : userId,
+        "token" : token,
+        "created" : created,
+        "expire" : expire
+      })
+      
+      sendEmail(email, "Permintaan Reset Password", f"Halo, {fullname}.\n\nSilakan klik link di bawah ini untuk mereset password anda:\n\nhttps://sipema.herokuapp.com/password/reset/token/{token}\n\nSalam hangat.\n\n-Tim SIPEMA")
+
+      return Response(status=200)
+
+    else:
+      return Response(status=404)
+
+  except Exception as e:
+    print(e)
+
+    return Response(status=500, response=e)
+
+@userController.route("/password/reset/token/<token>", methods=["PUT"])
+def resetPassword(token):
+  try:
+    db = get_db()
+
+    data = request.get_json()
+
+    resetPasswordToken = db["reset_password_token"].find_one({"token" : token})
+
+    if(resetPasswordToken is None):
+      return Response(status=404)
+    
+    else:
+      db["reset_password_token"].delete_one({"token" : token})
+
+      currentTime = time.time()
+
+      if(resetPasswordToken["expire"] <= currentTime):
+        return Response(status=401)
+
+      else:
+        password = data["password"]
+
+        db["user"].update_one({
+          "_id" : resetPasswordToken["user_id"]
+        }, {"$set" : {
+          "password" : generate_password_hash(password)
+        }})
+
+        return Response(status=200)
+
+  except Exception as e:
+    print(e)
+
+    return Response(status=500, response=e)
+
+#login user only
+@userController.route("/profile", methods=["GET"])
+def getProfile():
+  try:
+    if("token" not in request.headers):
+      token = request.headers["token"]
+
+      db = get_db()
+
+      loginToken = db["token"].find_one({"token" : token})
+
+      if(loginToken is not None):
+        user = db.find_one({
+          "_id" : loginToken["user_id"]
+        })
+
+        isTeacher = db["teacher"].find_one({"user_id" : user["_id"]}) is not None
+
+        return {
+          "_id" : str(user["_id"]),
+          "fullname" : user["fullname"],
+          "email" : user["email"],
+          "role" : "teacher" if isTeacher else "student",
+          "created" : user["created"],
+          "pp" : user["pp"] if "pp" in user else None
+        }
+
+    return Response(status=401)
+
+  except:
+    return Response(status=500)
+#login user only end
