@@ -148,7 +148,22 @@ def register(token):
           "created" : created
         })
 
-        return Response(status=200)
+        token = secrets.token_hex(32)
+
+        created = time.time()
+
+        expire = created + loginTokenExpire
+
+        db["token"].insert_one({
+          "token" : token,
+          "user_id" : _id,
+          "created" : created,
+          "expire" : expire
+        })
+
+        return {
+          "token" : token
+        }
 
     else:
       return Response(status=403)
