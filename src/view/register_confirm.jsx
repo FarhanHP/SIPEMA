@@ -1,6 +1,7 @@
 import { Box, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { setLoginToken } from "../local_storage";
 import {register} from "../request/user";
 import {site} from "../setting";
 import Loading from "./loading";
@@ -18,17 +19,26 @@ export default function RegisterConfirm(){
     register(token).then(res => {
       if(res.status === 500){
         setErrorMsg("ERROR 500: Terjadi masalah, mohon coba lagi nanti.")
+        setLoading(false)
       }
 
       else if(res.status === 401){
         setErrorMsg("ERROR 401: Token sudah kadaluarsa.")
+        setLoading(false)
       }
 
       else if(res.status === 403){
         setErrorMsg("ERROR 403: Token tidak berlaku.")
+        setLoading(false)
       }
 
-      setLoading(false)
+      else{
+        res.json().then(data => {
+          setLoginToken(data.token);
+
+          window.location.href = "/";
+        })
+      }
     })
   }, [token])
   
@@ -56,7 +66,6 @@ export default function RegisterConfirm(){
 
   else{
     return(
-      //will be changed
       <p>Success</p>
     )
   }
