@@ -354,38 +354,46 @@ def logout():
 
 @userController.route("/kick", methods=["DELETE"])
 def kick():
-  if("token" in request.headers):
+  try:
+    if("token" in request.headers):
       token = request.headers["token"]
-
-      db = get_db()
-
       loginToken = db["token"].find_one({
-        "token" : token
-      })
+            "token" : token
+          })
+      if(loginToken is None):
+        return {"msg": "unrecognized token", status = 400}
+  except Exception as e:
+    print(e)
+    return Response(status=500, response=e)
 
-      if (loginToken is not None):
-        inpData = request.get_json
-        result = db["student"].delete_one({"student_id": inpData["_id"]})
-        result1 = db["user"].delete_one({"_id": inpData["_id"]})
-        return Response(status=200)
+  inpData = request.get_json
+  result = db["student"].delete_one({"student_id": inpData["_id"]})
+  result1 = db["user"].delete_one({"_id": inpData["_id"]})
+  if (result.deleted_count > 0):
+    return Response(status=200)
+        
 
   return Response(status=401)
 
 @userController.route("/edit", methods=["PUT"])
 def edit():
-  if("token" in request.headers):
+  try:
+    if("token" in request.headers):
       token = request.headers["token"]
-
-      db = get_db()
-
       loginToken = db["token"].find_one({
-        "token" : token
-      })
+            "token" : token
+          })
+      if(loginToken is None):
+        return {"msg": "unrecognized token", status = 400}
+  except Exception as e:
+    print(e)
+    return Response(status=500, response=e)
 
-      if (loginToken is not None):
-        inpData = request.get_json
-        result = db["user"].update_one({"_id": inpData["_id"]}, {"$set": inpData})
-        return Response(status=200)
+  inpData = request.get_json
+  result = db["user"].update_one({"_id": inpData["_id"]}, {"$set": inpData})
+  if (result.matched_count > 0):
+    return Response(status=200)
+  
   return Response(status=401)
 #login user only end
 
