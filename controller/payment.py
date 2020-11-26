@@ -9,7 +9,21 @@ paymentController = Blueprint("paymentController", __name__)
 @paymentController.route("/payment/<user>", methods=["GET", "POST", "PUT", "DELETE"])
 def payment(user):
     collection = get_db()["payment"]
+    db = get_db()
+    try:
+        if("token" in request.headers):
+            token = request.headers["token"]
 
+        loginToken = db["token"].find_one({
+            "token" : token
+          })
+        
+        if(loginToken is None):
+            return {"msg": "unrecognized token", status = 400}
+    except Exception as e:
+        print(e)
+        return Response(status=500, response=e)
+    
     if (request.method == "GET"):
         result = collection.find({"student_id": user})
         return {"msg": "success", "result": result}

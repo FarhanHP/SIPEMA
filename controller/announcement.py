@@ -9,6 +9,20 @@ announcementController = Blueprint("announcementController", __name__)
 @announcementController.route("/announcement", methods = ["GET", "POST", "PUT", "DELETE"])
 def announcement():
     db = get_db()
+    try:
+        if("token" in request.headers):
+            token = request.headers["token"]
+
+        loginToken = db["token"].find_one({
+            "token" : token
+          })
+        
+        if(loginToken is None):
+            return {"msg": "unrecognized token", status = 400}
+    except Exception as e:
+        print(e)
+        return Response(status=500, response=e)
+    
     if (request.method == "GET"):
 
         data = db["announcement"].find()
