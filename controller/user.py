@@ -1,6 +1,6 @@
 from flask import Blueprint, Response, request
 from model import get_db
-from setting import tokenExpire
+from setting import tokenExpire, loginTokenExpire
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
 import time
@@ -33,7 +33,7 @@ def login():
 
         created = time.time()
 
-        expire = created + tokenExpire
+        expire = created + loginTokenExpire
 
         #only one login token for one user allowed
         db["token"].delete_many({
@@ -206,6 +206,32 @@ def resetPasswordRequest():
 
     return Response(status=500, response=e)
 
+@userController.route("/password/reset/check/token/<token>", methods=["GET"])
+def checkResetPasswordToken(token):
+  try:
+    db = get_db()
+
+    resetPasswordToken = db["reset_password_token"].find_one({
+      "token" : token
+    })
+
+    if(resetPasswordToken is None):
+      return Response(status=404)
+
+    else:
+      currentTime = time.time()
+
+      if(resetPasswordToken["expire"] <= currentTime):
+        return Response(status=401)
+
+      else:
+        return Response(status=200)
+
+  except Exception as e:
+    print(e)
+
+    return Response(status=500, response=e)
+
 @userController.route("/password/reset/token/<token>", methods=["PUT"])
 def resetPassword(token):
   try:
@@ -246,7 +272,7 @@ def resetPassword(token):
 @userController.route("/profile", methods=["GET"])
 def getProfile():
   try:
-    if("token" not in request.headers):
+    if("token" in request.headers):
       token = request.headers["token"]
 
       db = get_db()
@@ -254,23 +280,60 @@ def getProfile():
       loginToken = db["token"].find_one({"token" : token})
 
       if(loginToken is not None):
-        user = db.find_one({
+        user = db["user"].find_one({
           "_id" : loginToken["user_id"]
         })
 
-        isTeacher = db["teacher"].find_one({"user_id" : user["_id"]}) is not None
+        teacher = db["teacher"].find_one({"user_id" : user["_id"]})
+        student = db["student"].find_one({"user_id" : user["_id"]})
+
+        isTeacher = teacher is not None
+
+        approved = None
+
+        if(student is not None):
+          approved = student["approved"]
 
         return {
           "_id" : str(user["_id"]),
           "fullname" : user["fullname"],
           "email" : user["email"],
           "role" : "teacher" if isTeacher else "student",
+          "approved_student" : approved,
           "created" : user["created"],
           "pp" : user["pp"] if "pp" in user else None
         }
 
     return Response(status=401)
 
-  except:
-    return Response(status=500)
+  except Exception as e:
+    print(e)
+
+    return Response(status=500, response=e)
+
+@userController.route("/logout", methods=["DELETE"])
+def logout():
+  try:
+    if("token" in request.headers):
+      token = request.headers["token"]
+
+      db = get_db()
+
+      loginToken = db["token"].find_one({
+        "token" : token
+      })
+
+      if(loginToken is not None):
+        db["token"].delete_one({
+          "token" : token
+        })
+
+        return Response(status=200)
+
+    return Response(status=401)
+
+  except Exception as e:
+    print(e)
+
+    return Response(status=500, response=e)
 #login user only end
