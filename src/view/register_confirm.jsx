@@ -2,53 +2,43 @@ import { Box, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { setLoginToken } from "../local_storage";
-import {register} from "../request/user";
-import {site} from "../setting";
+import { register } from "../request/user";
+import { site } from "../setting";
 import Loading from "./loading";
 
-export default function RegisterConfirm(){
-  const {token} = useParams();
+export default function RegisterConfirm() {
+  const { token } = useParams();
 
   const [errorMsg, setErrorMsg] = useState(null);
 
   const [loading, setLoading] = useState(true);
 
-  useEffect(()=>{
-    setLoading(true)
+  useEffect(() => {
+    setLoading(true);
 
-    register(token).then(res => {
-      if(res.status === 500){
-        setErrorMsg("ERROR 500: Terjadi masalah, mohon coba lagi nanti.")
-        setLoading(false)
-      }
-
-      else if(res.status === 401){
-        setErrorMsg("ERROR 401: Token sudah kadaluarsa.")
-        setLoading(false)
-      }
-
-      else if(res.status === 403){
-        setErrorMsg("ERROR 403: Token tidak berlaku.")
-        setLoading(false)
-      }
-
-      else{
-        res.json().then(data => {
+    register(token).then((res) => {
+      if (res.status === 500) {
+        setErrorMsg("ERROR 500: Terjadi masalah, mohon coba lagi nanti.");
+        setLoading(false);
+      } else if (res.status === 401) {
+        setErrorMsg("ERROR 401: Token sudah kadaluarsa.");
+        setLoading(false);
+      } else if (res.status === 403) {
+        setErrorMsg("ERROR 403: Token tidak berlaku.");
+        setLoading(false);
+      } else {
+        res.json().then((data) => {
           setLoginToken(data.token);
 
           window.location.href = "/";
-        })
+        });
       }
-    })
-  }, [token])
-  
-  if(loading){
-    return(
-      <Loading />
-    )
-  }
+    });
+  }, [token]);
 
-  else if(errorMsg){
+  if (loading) {
+    return <Loading />;
+  } else if (errorMsg) {
     return (
       <Box display="flex" minHeight="100vh" width="100%">
         <Box margin="auto">
@@ -62,11 +52,7 @@ export default function RegisterConfirm(){
         </Box>
       </Box>
     );
-  }
-
-  else{
-    return(
-      <p>Success</p>
-    )
+  } else {
+    return <p>Success</p>;
   }
 }

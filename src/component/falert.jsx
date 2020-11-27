@@ -1,17 +1,15 @@
-import {Alert, AlertTitle} from "@material-ui/lab";
+import { Alert, AlertTitle } from "@material-ui/lab";
 
-export default function FAlert(props){
+export default function FAlert(props) {
   const severity = props.severity;
 
   const title = props.title;
 
   const body = props.body;
 
-  return(
+  return (
     <Alert severity={severity}>
-      <AlertTitle>
-        {title}
-      </AlertTitle>
+      <AlertTitle>{title}</AlertTitle>
 
       {body}
     </Alert>

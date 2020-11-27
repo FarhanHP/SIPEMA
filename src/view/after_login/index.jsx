@@ -8,55 +8,48 @@ import { getProfile } from "../../request/user";
 import Loading from "../loading";
 import NotApproved from "./not_approved";
 
-export default function Main(){
+export default function Main() {
   const history = useHistory();
 
   const dispatch = useDispatch();
 
-  const loginUser = useSelector(state => {
-    return state.loginUser
-  })
+  const loginUser = useSelector((state) => {
+    return state.loginUser;
+  });
 
   const [loading, setLoading] = useState(true);
 
-  useEffect(()=>{
-    if(loginUser === null){
+  useEffect(() => {
+    if (loginUser === null) {
       const token = getLoginToken();
 
-      if(token === null){
-        history.push("/login")
-      }
+      if (token === null) {
+        history.push("/login");
+      } else {
+        setLoading(true);
 
-      else{
-        setLoading(true)
+        getProfile(token).then((res) => {
+          if (res.ok) {
+            res.json().then((data) => {
+              dispatch(login(data));
 
-        getProfile(token).then(res => {
-          if(res.ok){
-            res.json().then(data => {
-              dispatch(login(data))
-
-              setLoading(false)
-            })
+              setLoading(false);
+            });
+          } else {
+            history.push("/login");
           }
-
-          else{
-            history.push("/login")
-          }
-        })
+        });
       }
     }
-  }, [loginUser, dispatch, history])
+  }, [loginUser, dispatch, history]);
 
-  if(loading){
-    return (
-      <Loading/>
-    )
-  }
-  else{
+  if (loading) {
+    return <Loading />;
+  } else {
     let routes = null;
 
-    if(loginUser.role === "student"){
-      if(!loginUser.approved){
+    if (loginUser.role === "student") {
+      if (!loginUser.approved) {
         routes = (
           <Route path="/">
             <NotApproved />
@@ -67,14 +60,12 @@ export default function Main(){
 
     return (
       <React.Fragment>
-      <Helmet>
-        <title>SIPEMA</title>
-      </Helmet>
+        <Helmet>
+          <title>SIPEMA</title>
+        </Helmet>
 
-      <Switch>
-        {routes}
-      </Switch>
+        <Switch>{routes}</Switch>
       </React.Fragment>
-    )
+    );
   }
 }
