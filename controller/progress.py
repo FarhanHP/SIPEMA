@@ -44,6 +44,26 @@ def progress(user):
                                        "tanggal": inpData["tanggal"],
                                        "created": time.time()
                                         })
+
+        #logging##############
+        db["log"].insert_one({"_id": ObjectId(),
+                              "user_id": loginToken["user_id"],
+                              "desc": "POST-ed progress: " + str({"_id": ObjectId(),
+                                       "student_id": user,
+                                       "type": inpData["type"],
+                                       "hal_awal": inpData["hal_awal"],
+                                       "hal_akhir": inpData["hal_akhir"],
+                                       "surat_awal": inpData["surat_awal"],
+                                       "surat_akhir": inpData["surat_akhir"],
+                                       "ayat_awal": inpData["ayat_awal"],
+                                       "ayat_akhir": inpData["ayat_akhir"],
+                                       "comment": inpData["comment"],
+                                       "tanggal": inpData["tanggal"],
+                                       "created": time.time()
+                                        }),
+                              "created": created
+                              })
+        #end logging##########
         
         return {"msg": "success", "result": result}
 
@@ -56,6 +76,14 @@ def progress(user):
         if (result.matched_count == 0):
             return Response(response = "target id not found", status = 400)
 
+        #logging##############
+        db["log"].insert_one({"_id": ObjectId(),
+                              "user_id": loginToken["user_id"],
+                              "desc": "PUT-ed progress: " + str(inpData),
+                              "created": created
+                              })
+        #end logging##########
+        
         return ("msg": "success", "result": result)
 
     if (request.method == "DELETE"):
@@ -66,6 +94,14 @@ def progress(user):
         if (result.deleted_count == 0):
             return Response(response = "target id not found", status = 400)
 
+        #logging##############
+        db["log"].insert_one({"_id": ObjectId(),
+                              "user_id": loginToken["user_id"],
+                              "desc": "DELETE-ed progress",
+                              "created": created
+                              })
+        #end logging##########
+        
         return {"msg": "success", "result": result}
 
     return {"msg": "unrecognized method", status = 405}

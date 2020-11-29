@@ -46,7 +46,19 @@ def login():
           "created" : created,
           "expire" : expire
         })
-
+        
+        #logging
+        db["log"].insert_one({"_id": ObjectId(),
+                              "user_id": userId,
+                              "desc": "Logged in: " + str({
+                                                          "token" : token,
+                                                          "user_id" : userId,
+                                                          "created" : created,
+                                                          "expire" : expire
+                                                          }),
+                              "created": time.time()
+                              })
+        #logging end
         return {
           "token" : token
         }
@@ -100,6 +112,22 @@ def registerRequest():
     })
 
     sendEmail(email, "Pendaftaran SIPEMA", f"Halo, {fullname}.\n\nSelangkah lagi untuk bergabung ke SIPEMA dengan klik tautan di bawah ini untuk mengkonfirmasi email anda:\n\nhttps://sipema.herokuapp.com/register/token/{token}\n\nSalam hangat.\n\n-Tim SIPEMA")
+
+    #logging
+    db["log"].insert_one({"_id": ObjectId(),
+                          "user_id": user["_id"],
+                          "desc": "requested register in: " + str({
+                                                      "_id" : tokenId,
+                                                      "email" : email,
+                                                      "fullname" : fullname,
+                                                      "password" : generate_password_hash(data["password"]),
+                                                      "created" : created,
+                                                      "expire" : expire,
+                                                      "token" : token
+                                                      }),
+                          "created": time.time()
+                          })
+    #logging end
 
     return Response(status=200)
 
@@ -161,6 +189,20 @@ def register(token):
           "expire" : expire
         })
 
+        #logging
+        db["log"].insert_one({"_id": ObjectId(),
+                              "user_id": _id,
+                              "desc": "Logged in: " + str({
+                                                          "_id" : _id,
+                                                          "email" : registerToken["email"],
+                                                          "password" : registerToken["password"],
+                                                          "fullname" : registerToken["fullname"],
+                                                          "created" : created
+                                                          }),
+                              "created": time.time()
+                              })
+        #logging end
+        
         return {
           "token" : token
         }
@@ -210,6 +252,19 @@ def resetPasswordRequest():
       })
       
       sendEmail(email, "Permintaan Reset Password", f"Halo, {fullname}.\n\nSilakan klik link di bawah ini untuk mereset password anda:\n\nhttps://sipema.herokuapp.com/password/reset/token/{token}\n\nSalam hangat.\n\n-Tim SIPEMA")
+
+      #logging
+      db["log"].insert_one({"_id": ObjectId(),
+                            "user_id": userId,
+                            "desc": "Requested password request in: " + str({
+                                                                            "user_id" : userId,
+                                                                            "token" : token,
+                                                                            "created" : created,
+                                                                            "expire" : expire
+                                                                            }),
+                            "created": time.time()
+                            })
+      #logging end
 
       return Response(status=200)
 
@@ -275,7 +330,15 @@ def resetPassword(token):
         }, {"$set" : {
           "password" : generate_password_hash(password)
         }})
-
+        
+        #logging
+        db["log"].insert_one({"_id": ObjectId(),
+                              "user_id": resetPasswordToken["user_id"],
+                              "desc": "Reset password",
+                              "created": time.time()
+                              })
+        #logging end
+        
         return Response(status=200)
 
   except Exception as e:
@@ -343,6 +406,14 @@ def logout():
           "token" : token
         })
 
+        #logging
+        db["log"].insert_one({"_id": ObjectId(),
+                              "user_id": loginToken["user_id"],
+                              "desc": "Logged out",
+                              "created": time.time()
+                              })
+        #logging end
+
         return Response(status=200)
 
     return Response(status=401)
@@ -370,6 +441,13 @@ def kick():
   result = db["student"].delete_one({"student_id": inpData["_id"]})
   result1 = db["user"].delete_one({"_id": inpData["_id"]})
   if (result.deleted_count > 0):
+    #logging
+    db["log"].insert_one({"_id": ObjectId(),
+                          "user_id": inpData["_id"],
+                          "desc": "Kicked",
+                          "created": time.time()
+                          })
+    #logging end
     return Response(status=200)
         
 
@@ -392,6 +470,13 @@ def edit():
   inpData = request.get_json
   result = db["user"].update_one({"_id": inpData["_id"]}, {"$set": inpData})
   if (result.matched_count > 0):
+    #logging
+    db["log"].insert_one({"_id": ObjectId(),
+                          "user_id": inpData["_id"],
+                          "desc": "Edited: " + str(inpData),
+                          "created": time.time()
+                          })
+    #logging end
     return Response(status=200)
   
   return Response(status=401)

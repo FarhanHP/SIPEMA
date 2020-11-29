@@ -19,6 +19,7 @@ def announcement():
         
         if(loginToken is None):
             return {"msg": "unrecognized token", status = 400}
+        
     except Exception as e:
         print(e)
         return Response(status=500, response=e)
@@ -43,6 +44,18 @@ def announcement():
                                        "body": inpData["body"],
                                        "public": inpData["public"],
                                        "created": created})
+
+        #logging##############
+        db["log"].insert_one({"_id": ObjectId(),
+                              "user_id": loginToken["user_id"],
+                              "desc": "POST-ed announcement: " + str({"teacher_id": inpData["teacher_id"],
+                                       "title": inpData["title"],
+                                       "body": inpData["body"],
+                                       "public": inpData["public"],
+                                       "created": created}),
+                              "created": created
+                              })
+        #end logging##########
         
         return {"msg": "success", "result": result}
 
@@ -56,8 +69,15 @@ def announcement():
 
         if (result.matched_count == 0):
             return Response(response = "target id not found", status = 400)
-            
 
+        #logging##############
+        db["log"].insert_one({"_id": ObjectId(),
+                              "user_id": loginToken["user_id"],
+                              "desc": "PUT-ed announcement: " + str(inpData)),
+                              "created": created
+                              })
+        #end logging##########
+        
         return {"msg": "success", "result": result}
 
     if (request.method == "DELETE"):
@@ -69,6 +89,14 @@ def announcement():
         if (result.deleted_count == 0):
             return Response(response = "target id not found", status = 400)
 
+        #logging##############
+        db["log"].insert_one({"_id": ObjectId(),
+                              "user_id": loginToken["user_id"],
+                              "desc": "DELETE-ed announcement",
+                              "created": created
+                              })
+        #end logging##########
+        
         return {"msg": "success", "result": result}
 
 
