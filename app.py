@@ -3,6 +3,7 @@ from flask_cors import CORS
 from pymongo import MongoClient
 from setting import secretKey
 from controller.user import userController
+from controller.student import studentController
 
 app = Flask(__name__, static_folder="./build/static", template_folder="./build")
 
@@ -13,6 +14,7 @@ app.debug = True
 CORS(app)
 
 app.register_blueprint(userController, url_prefix="/b/user")
+app.register_blueprint(studentController, url_prefix="/b/student")
 
 @app.teardown_appcontext
 def teardown_db(a):

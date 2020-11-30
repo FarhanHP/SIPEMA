@@ -2,6 +2,7 @@ from flask import Blueprint, Response, request
 from model import get_db
 from setting import tokenExpire, loginTokenExpire
 from bson.objectid import ObjectId
+from bson.errors import InvalidId
 from werkzeug.security import generate_password_hash, check_password_hash
 import time
 import secrets
@@ -294,7 +295,9 @@ def getProfile():
 
       loginToken = db["token"].find_one({"token" : token})
 
-      if(loginToken is not None):
+      currentTime = time.time()
+
+      if(loginToken is not None and loginToken["expire"] > currentTime):
         user = db["user"].find_one({
           "_id" : loginToken["user_id"]
         })
@@ -352,48 +355,41 @@ def logout():
 
     return Response(status=500, response=e)
 
-@userController.route("/kick", methods=["DELETE"])
-def kick():
-  try:
-    if("token" in request.headers):
-      token = request.headers["token"]
-      loginToken = db["token"].find_one({
-            "token" : token
-          })
-      if(loginToken is None):
-        return {"msg": "unrecognized token", status = 400}
-  except Exception as e:
-    print(e)
-    return Response(status=500, response=e)
-
-  inpData = request.get_json
-  result = db["student"].delete_one({"student_id": inpData["_id"]})
-  result1 = db["user"].delete_one({"_id": inpData["_id"]})
-  if (result.deleted_count > 0):
-    return Response(status=200)
-        
-
-  return Response(status=401)
-
-@userController.route("/edit", methods=["PUT"])
+@userController.route("/profile/set", methods=["PUT"])
 def edit():
   try:
     if("token" in request.headers):
       token = request.headers["token"]
+
+      db = get_db()
+
       loginToken = db["token"].find_one({
-            "token" : token
-          })
-      if(loginToken is None):
-        return {"msg": "unrecognized token", status = 400}
+        "token" : token
+      })
+
+      currentTime = time.time()
+
+      if(loginToken is None or loginToken["expire"] <= currentTime):
+        return Response(status=401)
+
+      else:
+        data = request.get_json()
+
+        userId = loginToken["user_id"]
+
+        result = db["user"].update_one({"_id" : userId}, {"$set" : data})
+
+        if(result.matched_count == 1):
+          return Response(status=200)
+
+        else:
+          return Response(status=404)
+  
+    else:
+      return Response(status=401)
+
   except Exception as e:
     print(e)
     return Response(status=500, response=e)
-
-  inpData = request.get_json
-  result = db["user"].update_one({"_id": inpData["_id"]}, {"$set": inpData})
-  if (result.matched_count > 0):
-    return Response(status=200)
-  
-  return Response(status=401)
 #login user only end
 
