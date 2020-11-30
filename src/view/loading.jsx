@@ -1,5 +1,3 @@
-import { LocalDining } from "@material-ui/icons";
-
 import { Box, CircularProgress } from "@material-ui/core";
 
 export default function Loading() {

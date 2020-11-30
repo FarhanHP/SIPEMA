@@ -6,7 +6,8 @@ import { login } from "../../actions";
 import { getLoginToken } from "../../local_storage";
 import { getProfile } from "../../request/user";
 import Loading from "../loading";
-import NotApproved from "./not_approved";
+import NotApproved from "./student/not_approved";
+import Announcement from "./teacher/announcement";
 
 export default function Main() {
   const history = useHistory();
@@ -56,6 +57,14 @@ export default function Main() {
           </Route>
         );
       }
+    }
+
+    else if(loginUser.role === "teacher") {
+      routes = (
+        <Route path="/">
+          <Announcement/>
+        </Route>
+      )
     }
 
     return (

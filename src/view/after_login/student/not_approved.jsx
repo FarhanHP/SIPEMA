@@ -1,8 +1,8 @@
 import { Box, Button, Typography } from "@material-ui/core";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { getLoginToken, deleteLoginToken } from "../../local_storage";
-import { logout } from "../../request/user";
+import { getLoginToken, deleteLoginToken } from "../../../local_storage";
+import { logout } from "../../../request/user";
 
 export default function NotApproved() {
   const token = getLoginToken();
