@@ -36,6 +36,22 @@ def setStudent(studentId):
           }})
 
           if(res.matched_count == 1):
+            student = db["student"].find_one({"_id" : studentId})
+
+            db["log"].insert_one({
+              "_id": ObjectId(),
+              "user_id": teacher["user_id"],
+              "desc": "menerima murid." if approved else "menendang murid",
+              "created": time.time()
+            })
+
+            db["log"].insert_one({
+              "_id": ObjectId(),
+              "user_id": student["user_id"],
+              "desc": "diterima sebagai murid." if approved else "ditendang.",
+              "created": time.time()
+            })
+
             return Response(status=200)
 
           else:

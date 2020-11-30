@@ -47,6 +47,15 @@ def login():
           "created" : created,
           "expire" : expire
         })
+        
+        #logging
+        db["log"].insert_one({
+          "_id": ObjectId(),
+          "user_id": userId,
+          "desc": "login",
+          "created": time.time()
+        })
+        #logging end
 
         return {
           "token" : token
@@ -162,6 +171,15 @@ def register(token):
           "expire" : expire
         })
 
+        #logging
+        db["log"].insert_one({
+          "_id": ObjectId(),
+          "user_id": _id,
+          "desc": "berhasil mendaftar.",
+          "created": time.time()
+        })
+        #logging end
+        
         return {
           "token" : token
         }
@@ -211,6 +229,15 @@ def resetPasswordRequest():
       })
       
       sendEmail(email, "Permintaan Reset Password", f"Halo, {fullname}.\n\nSilakan klik link di bawah ini untuk mereset password anda:\n\nhttps://sipema.herokuapp.com/password/reset/token/{token}\n\nSalam hangat.\n\n-Tim SIPEMA")
+
+      #logging
+      db["log"].insert_one({
+        "_id": ObjectId(),
+        "user_id": userId,
+        "desc": "meminta reset password.",
+        "created": time.time()
+      })
+      #logging end
 
       return Response(status=200)
 
@@ -276,7 +303,16 @@ def resetPassword(token):
         }, {"$set" : {
           "password" : generate_password_hash(password)
         }})
-
+        
+        #logging
+        db["log"].insert_one({
+          "_id": ObjectId(),
+          "user_id": resetPasswordToken["user_id"],
+          "desc": "mereset password.",
+          "created": time.time()
+        })
+        #logging end
+        
         return Response(status=200)
 
   except Exception as e:
@@ -346,6 +382,15 @@ def logout():
           "token" : token
         })
 
+        #logging
+        db["log"].insert_one({
+          "_id": ObjectId(),
+          "user_id": loginToken["user_id"],
+          "desc": "log out.",
+          "created": time.time()
+        })
+        #logging end
+
         return Response(status=200)
 
     return Response(status=401)
@@ -378,6 +423,15 @@ def edit():
         userId = loginToken["user_id"]
 
         result = db["user"].update_one({"_id" : userId}, {"$set" : data})
+
+        #logging
+        db["log"].insert_one({
+          "_id": ObjectId(),
+          "user_id": userId,
+          "desc": "menyunting profil.",
+          "created": time.time()
+        })
+        #logging end
 
         if(result.matched_count == 1):
           return Response(status=200)

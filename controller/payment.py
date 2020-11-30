@@ -35,6 +35,17 @@ def payment(user):
                                         "amount": inpData["amount"],
                                         "created": time.time()
                                         })
+
+        #logging##############
+        db["log"].insert_one({"_id": ObjectId(),
+                              "user_id": loginToken["user_id"],
+                              "desc": "POST-ed payment: " + str({"student_id": user,
+                                        "amount": inpData["amount"],
+                                        "created": time.time()
+                                        }),
+                              "created": created
+                              })
+        #end logging##########
         
         return {"msg": "success", "result": result}
 
@@ -46,6 +57,14 @@ def payment(user):
         if (result.matched_count == 0):
             return Response(response = "target id not found", status = 400)
 
+        #logging##############
+        db["log"].insert_one({"_id": ObjectId(),
+                              "user_id": loginToken["user_id"],
+                              "desc": "PUT-ed payment: " + str(inpData)),
+                              "created": created
+                              })
+        #end logging##########
+        
         return ("msg": "success", "result": result)
 
     if (request.method == "DELETE"):
@@ -56,6 +75,14 @@ def payment(user):
         if (result.deleted_count == 0):
             return Response(response = "target id not found", status = 400)
 
+        #logging##############
+        db["log"].insert_one({"_id": ObjectId(),
+                              "user_id": loginToken["user_id"],
+                              "desc": "DELETE-ed payment",
+                              "created": created
+                              })
+        #end logging##########
+        
         return {"msg": "success", "result": result}
 
     return {"msg": "unrecognized method", status = 405}
