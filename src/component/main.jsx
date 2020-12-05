@@ -87,7 +87,9 @@ export default function Main(props){
       </Hidden>
 
       <Box className={classes.root} width="100%" minHeight={"100vh"}>
-        <Box pt={"70px"}>
+        <Box pt={"90px"} ml={{
+          md: "290px"
+        }} px="10px">
           {props.children}
         </Box>
       </Box>

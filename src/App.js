@@ -8,6 +8,10 @@ import ForgetPassword from "./view/forget_password";
 import RegisterConfirm from "./view/register_confirm";
 import ResetPassword from "./view/reset_password";
 import Main from "./view/after_login";
+import moment from "moment";
+import 'moment/locale/id';
+
+moment.locale("id");
 
 const useStyles = makeStyles(() => {
   return {

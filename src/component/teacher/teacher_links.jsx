@@ -1,6 +1,6 @@
 import React from "react";
 import {List, ListItemText, ListItem, ListItemIcon, makeStyles} from "@material-ui/core";
-import {Announcement as AnnouncementIcon, People as PeopleIcon, AttachMoney as AttachMoneyIcon} from "@material-ui/icons";
+import {AnnouncementOutlined as AnnouncementIcon, PeopleOutlined as PeopleIcon, AttachMoney as AttachMoneyIcon, History as HistoryIcon} from "@material-ui/icons";
 import {blueGrey} from "@material-ui/core/colors";
 import {NavLink} from "react-router-dom";
 
@@ -49,6 +49,14 @@ export default function TeacherLinks(){
         </ListItemIcon>
 
         <ListItemText primary="Riwayat Pembayaran Murid" />
+      </ListItem>
+
+      <ListItem button className={classes.listBtn} component={NavLink} to="/log" activeClassName={classes.activeLink}>
+        <ListItemIcon className={classes.listItemIcon}>
+          <HistoryIcon />
+        </ListItemIcon>
+
+        <ListItemText primary="Log Aktivitas Pengguna" />
       </ListItem>
     </List>
   );

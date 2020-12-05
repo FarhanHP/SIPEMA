@@ -7,7 +7,11 @@ import { getLoginToken } from "../../local_storage";
 import { getProfile } from "../../request/user";
 import Loading from "../loading";
 import NotApproved from "./student/not_approved";
+import ActivityLog from "./teacher/activity_log";
 import Announcement from "./teacher/announcement";
+import StudentManagement from "./teacher/student_management";
+import StudentPayment from "./teacher/student_payment";
+import Profile from "./profile"
 
 export default function Main() {
   const history = useHistory();
@@ -60,11 +64,23 @@ export default function Main() {
     }
 
     else if(loginUser.role === "teacher") {
-      routes = (
+      routes = [
+        <Route path="/students">
+          <StudentManagement />
+        </Route>,
+        <Route path="/payment">
+          <StudentPayment />
+        </Route>,
+        <Route path="/log">
+          <ActivityLog />
+        </Route>,
+        <Route path="/profile">
+          <Profile />
+        </Route>,
         <Route path="/">
           <Announcement/>
-        </Route>
-      )
+        </Route>,
+      ]
     }
 
     return (
@@ -73,7 +89,9 @@ export default function Main() {
           <title>SIPEMA</title>
         </Helmet>
 
-        <Switch>{routes}</Switch>
+        <Switch>
+          {routes}
+        </Switch>
       </React.Fragment>
     );
   }

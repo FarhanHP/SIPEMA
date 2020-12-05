@@ -1,5 +1,5 @@
 import { baseUrl } from "../setting";
-import { request } from "./";
+import { request, requestJson } from "./";
 
 export const getProfile = (token) => {
   return request(`${baseUrl}b/user/profile`, "GET", {
@@ -8,7 +8,7 @@ export const getProfile = (token) => {
 };
 
 export const login = (email, password) => {
-  return request(
+  return requestJson(
     `${baseUrl}b/user/login`,
     "POST",
     {
@@ -22,7 +22,7 @@ export const login = (email, password) => {
 };
 
 export const registerRequest = (email, fullname, password) => {
-  return request(
+  return requestJson(
     `${baseUrl}b/user/register/request`,
     "POST",
     {
@@ -41,7 +41,7 @@ export const register = (token) => {
 };
 
 export const resetPasswordRequest = (email) => {
-  return request(
+  return requestJson(
     `${baseUrl}b/user/password/reset`,
     "POST",
     {
@@ -54,7 +54,7 @@ export const resetPasswordRequest = (email) => {
 };
 
 export const resetPassword = (token, password) => {
-  return request(
+  return requestJson(
     `${baseUrl}b/user/password/reset/token/${token}`,
     "PUT",
     {
@@ -75,3 +75,29 @@ export const logout = (token) => {
     token,
   });
 };
+
+export const setProfile = (token, fullname) => {
+  return requestJson(`${baseUrl}b/user/profile/set`, "PUT", {
+    "Content-Type": "application/json",
+    "token" : token
+  }, {fullname})
+}
+
+export const changePass = (token, oldPass, newPass) => {
+  return requestJson(`${baseUrl}b/user/password/set`, "PUT", {
+    "Content-Type": "application/json",
+    "token" : token
+  }, {
+    old_password : oldPass,
+    new_password : newPass
+  })
+}
+
+export const changePp = (token, photo) => {
+  const form = new FormData()
+  form.append("photo", photo)
+
+  return request(`${baseUrl}b/user/profile/picture/set`, "PUT", {
+    token
+  }, form)
+}
