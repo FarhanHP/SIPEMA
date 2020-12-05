@@ -7,6 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import time
 import secrets
 from email_auto import sendEmail
+import cloudinary.uploader
 
 userController = Blueprint("userController", __name__)
 
@@ -418,7 +419,15 @@ def edit():
         return Response(status=401)
 
       else:
-        data = request.get_json()
+        dataJson = request.get_json()
+
+        data = {}
+
+        forbiddenProperties = ["password", "email", "created", "pp", "public_id"]
+
+        for i in dataJson:
+          if(i not in forbiddenProperties):
+            data[i] = dataJson[i]
 
         userId = loginToken["user_id"]
 
@@ -428,7 +437,7 @@ def edit():
         db["log"].insert_one({
           "_id": ObjectId(),
           "user_id": userId,
-          "desc": "menyunting profil.",
+          "desc": "telah menyunting profil.",
           "created": time.time()
         })
         #logging end
@@ -439,6 +448,112 @@ def edit():
         else:
           return Response(status=404)
   
+    else:
+      return Response(status=401)
+
+  except Exception as e:
+    print(e)
+    return Response(status=500, response=e)
+
+@userController.route("/profile/picture/set", methods=["PUT"])
+def changeProfilePhoto():
+  try:
+    if("token" in request.headers):
+      token = request.headers["token"]
+
+      db = get_db()
+
+      loginToken = db["token"].find_one({"token" : token})
+
+      currentTime = time.time()
+
+      if(loginToken is not None and loginToken["expire"] > currentTime):
+        userId = loginToken["user_id"]
+
+        user = db["user"].find_one({"_id" : userId})
+
+        photo = request.files.get("photo")
+
+        res = cloudinary.uploader.upload(photo)
+
+        if("public_id" in user):
+          cloudinary.uploader.destroy(user["public_id"])
+
+        db["user"].update_one({"_id" : userId}, {"$set" : {
+          "public_id" : res["public_id"],
+          "pp" : res["secure_url"]
+        }})
+
+        db["log"].insert_one({
+          "user_id" : userId, 
+          "desc" : "mengganti foto profil", 
+          "created" : time.time()
+        })
+
+        return {"pp" : res["secure_url"]}
+
+    return Response(status=401)
+
+  except Exception as e:
+    print(e)
+
+    return Response(status=500, response=e)
+
+@userController.route("/password/set", methods=["PUT"])
+def changePassword():
+  try:
+    if("token" in request.headers):
+      token = request.headers["token"]
+
+      db = get_db()
+
+      loginToken = db["token"].find_one({
+        "token" : token
+      })
+
+      currentTime = time.time()
+
+      if(loginToken is None or loginToken["expire"] <= currentTime):
+        return Response(status=401)
+
+      else:
+        data = request.get_json()
+
+        oldPassword = data["old_password"]
+
+        newPassword = data["new_password"]
+
+        userId = loginToken["user_id"]
+
+        user = db["user"].find_one({"_id" : userId})
+
+        if(user is not None):
+          if(check_password_hash(user["password"], oldPassword)):
+            db["user"].update_one({
+              "_id" : userId
+            }, {
+              "$set" : {
+                "password" : generate_password_hash(newPassword)
+              }
+            })
+
+            #logging
+            db["log"].insert_one({
+              "_id": ObjectId(),
+              "user_id": userId,
+              "desc": "mengubah password.",
+              "created": time.time()
+            })
+            #logging end
+
+            return Response(status=200)
+
+          else:
+            return Response(status=401, response="wrong password")
+
+        else:
+          return Response(status=404)
+
     else:
       return Response(status=401)
 
