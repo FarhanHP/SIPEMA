@@ -63,4 +63,58 @@ def setStudent(studentId):
     print(e)
 
     return Response(response=e, status=500)
+
+
+@studentController.route("/get/<start>/<limit>/<approved>", methods=["GET"])
+def getStudents(start, limit, approved):
+  try:
+    start = int(start)
+
+    limit = int(limit)
+
+    approved = approved.lower() == "true"
+
+    if("token" in request.headers):
+      token = request.headers["token"]
+
+      db = get_db()
+
+      loginToken = db["token"].find_one({"token" : token})
+
+      currentTime = time.time()
+
+      if(loginToken is not None and loginToken["expire"] > currentTime):
+        userId = loginToken["user_id"]
+
+        teacher = db["teacher"].find_one({"user_id" : userId})
+
+        if(teacher is not None):
+          students = db["student"].find({"approved" : approved}).sort("created", -1).skip(start).limit(limit)
+          
+          studentsCount = db["student"].find({"approved" : approved}).count()
+
+          output = []
+
+          for i in students:
+            user = db["user"].find_one({"_id" : i["user_id"]})
+
+            output.append({
+              "_id" : str(i["_id"]),
+              "user" : {
+                "fullname" : user["fullname"],
+                "pp" : user["pp"] if "pp" in user else None
+              }
+            })
+
+          return {
+            "students" : output,
+            "count" : studentsCount
+          }
+
+    return Response(status=401)
+
+  except Exception as e:
+    print(e)
+
+    return Response(status=500, response=e)
 #teacher login required end
