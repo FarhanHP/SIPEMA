@@ -16,7 +16,7 @@ def login():
   try:
     data = request.get_json()
 
-    email = data["email"]
+    email = data["email"].lower()
 
     password = data["password"]
 
