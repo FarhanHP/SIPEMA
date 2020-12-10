@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
-import { Route, useHistory, Switch } from "react-router-dom";
+import { Route, useHistory, Switch, Redirect } from "react-router-dom";
 import { login } from "../../actions";
 import { getLoginToken } from "../../local_storage";
 import { getProfile } from "../../request/user";
@@ -11,6 +11,11 @@ import ActivityLog from "./teacher/activity_log";
 import Announcement from "./teacher/announcement";
 import StudentManagement from "./teacher/student_management";
 import StudentPayment from "./teacher/student_payment";
+
+import MyAnnouncement from "./student/Announcement";
+import MyPayment from "./student/Payment";
+import MyProgress from "./student/Progress";
+
 import Profile from "./profile";
 
 export default function Main() {
@@ -61,6 +66,17 @@ export default function Main() {
           </Route>
         );
       }
+      routes = [
+        <Route path="/payment">
+          <MyPayment />
+        </Route>,
+        <Route path="/announcement">
+          <MyAnnouncement />
+        </Route>,
+        <Route path="/progress">
+          <MyProgress />
+        </Route>,
+      ];
     } else if (loginUser.role === "teacher") {
       routes = [
         <Route path="/students">
@@ -80,7 +96,7 @@ export default function Main() {
         </Route>,
       ];
     }
-
+    // console.log(routes);
     return (
       <React.Fragment>
         <Helmet>
