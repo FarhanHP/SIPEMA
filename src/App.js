@@ -1,4 +1,4 @@
-import { CssBaseline, makeStyles, Box } from "@material-ui/core";
+import { CssBaseline, createMuiTheme, ThemeProvider } from "@material-ui/core";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Login from "./view/login";
 import Page404 from "./view/page404";
@@ -9,26 +9,23 @@ import RegisterConfirm from "./view/register_confirm";
 import ResetPassword from "./view/reset_password";
 import Main from "./view/after_login";
 import moment from "moment";
-import 'moment/locale/id';
+import "moment/locale/id";
 
 moment.locale("id");
 
-const useStyles = makeStyles(() => {
-  return {
-    root: {
-      backgroundColor: "white",
+const theme = createMuiTheme({
+  palette: {
+    background: {
+      default: "#ffffff",
     },
-  };
+  },
 });
-
+console.log(theme);
 function App() {
-  const classes = useStyles();
-
   return (
     <React.Fragment>
-      <CssBaseline />
-
-      <Box className={classes.root}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
         <BrowserRouter>
           <Switch>
             <Route path="/login">
@@ -60,7 +57,7 @@ function App() {
             </Route>
           </Switch>
         </BrowserRouter>
-      </Box>
+      </ThemeProvider>
     </React.Fragment>
   );
 }
