@@ -12,9 +12,7 @@ import Announcement from "./teacher/announcement";
 import StudentManagement from "./teacher/student_management";
 import StudentPayment from "./teacher/student_payment";
 
-import MyAnnouncement from "./student/Announcement";
-import MyPayment from "./student/Payment";
-import MyProgress from "./student/Progress";
+import StudentDashboard from "./student/StudentLayout";
 
 import Profile from "./profile";
 
@@ -67,14 +65,8 @@ export default function Main() {
         );
       }
       routes = [
-        <Route path="/payment">
-          <MyPayment />
-        </Route>,
-        <Route path="/announcement">
-          <MyAnnouncement />
-        </Route>,
-        <Route path="/progress">
-          <MyProgress />
+        <Route path="/">
+          <StudentDashboard />
         </Route>,
       ];
     } else if (loginUser.role === "teacher") {
