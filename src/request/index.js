@@ -1,6 +1,6 @@
-export const requestJson = async (url, method, headers, body, signal)=>{
+export const requestJson = async (url, method, headers, body, signal) => {
   return request(url, method, headers, JSON.stringify(body), signal);
-}
+};
 
 export const request = async (url, method, headers, body, signal) => {
   const response = await fetch(url, {

@@ -1,21 +1,31 @@
-import {useState} from "react";
-import {Box, Avatar, Paper, Typography, makeStyles, IconButton, Menu, MenuItem, Button} from "@material-ui/core";
-import {MoreVert as MoreVertIcon} from "@material-ui/icons";
+import { useState } from "react";
+import {
+  Box,
+  Avatar,
+  Paper,
+  Typography,
+  makeStyles,
+  IconButton,
+  Menu,
+  MenuItem,
+  Button,
+} from "@material-ui/core";
+import { MoreVert as MoreVertIcon } from "@material-ui/icons";
 
-const useStyles = makeStyles(theme => {
+const useStyles = makeStyles((theme) => {
   return {
     avatar: {
       height: theme.spacing(8),
       width: theme.spacing(8),
-      fontSize: "50px"
+      fontSize: "50px",
     },
     greyColor: {
-      color: "grey"
-    }
-  }
-})
+      color: "grey",
+    },
+  };
+});
 
-export default function StudentCard(props){
+export default function StudentCard(props) {
   const student = props.student;
 
   const pp = student.user.pp;
@@ -27,23 +37,30 @@ export default function StudentCard(props){
 
   const [kicking, setKicking] = useState(false);
 
-  const onKick = ()=>{
+  const onKick = () => {
     setKicking(true);
 
-    const res = props.onKick()
+    const res = props.onKick();
 
-    res.then(value => {
-      if(!value){
+    res.then((value) => {
+      if (!value) {
         setKicking(false);
       }
-    })
-  }
+    });
+  };
 
   return (
-    <Box component={Paper} elevation={3} p="10px" my="10px" display="flex" width={{
-      xs: "100%",
-      sm: "500px"
-    }}>
+    <Box
+      component={Paper}
+      elevation={3}
+      p="10px"
+      my="10px"
+      display="flex"
+      width={{
+        xs: "100%",
+        sm: "500px",
+      }}
+    >
       <Box my="auto" mr="5px">
         <Avatar className={classes.avatar} src={pp}>
           {fullname.charAt(0)}
@@ -51,28 +68,31 @@ export default function StudentCard(props){
       </Box>
 
       <Box my="auto" width="100%">
-        <Typography >
+        <Typography>
           <b>{fullname}</b>
         </Typography>
 
-        <Typography className={classes.greyColor}>
-          Murid
-        </Typography>
+        <Typography className={classes.greyColor}>Murid</Typography>
       </Box>
 
       <Box>
-        <IconButton size="small" onClick={(event)=>{
-          setAnchorEl(event.currentTarget);
-        }}>
+        <IconButton
+          size="small"
+          onClick={(event) => {
+            setAnchorEl(event.currentTarget);
+          }}
+        >
           <MoreVertIcon size="small" />
         </IconButton>
 
-        <Menu open={anchorEl} anchorEl={anchorEl} onClose={()=>{
-          setAnchorEl(null)
-        }}>
-          <MenuItem>
-            Lihat Detil
-          </MenuItem>
+        <Menu
+          open={anchorEl}
+          anchorEl={anchorEl}
+          onClose={() => {
+            setAnchorEl(null);
+          }}
+        >
+          <MenuItem>Lihat Detil</MenuItem>
 
           <MenuItem component={Button} disabled={kicking} onClick={onKick}>
             {kicking ? "MENENDANG..." : "TENDANG"}

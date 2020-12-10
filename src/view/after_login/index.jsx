@@ -11,7 +11,7 @@ import ActivityLog from "./teacher/activity_log";
 import Announcement from "./teacher/announcement";
 import StudentManagement from "./teacher/student_management";
 import StudentPayment from "./teacher/student_payment";
-import Profile from "./profile"
+import Profile from "./profile";
 
 export default function Main() {
   const history = useHistory();
@@ -61,9 +61,7 @@ export default function Main() {
           </Route>
         );
       }
-    }
-
-    else if(loginUser.role === "teacher") {
+    } else if (loginUser.role === "teacher") {
       routes = [
         <Route path="/students">
           <StudentManagement />
@@ -78,9 +76,9 @@ export default function Main() {
           <Profile />
         </Route>,
         <Route path="/">
-          <Announcement/>
+          <Announcement />
         </Route>,
-      ]
+      ];
     }
 
     return (
@@ -89,9 +87,7 @@ export default function Main() {
           <title>SIPEMA</title>
         </Helmet>
 
-        <Switch>
-          {routes}
-        </Switch>
+        <Switch>{routes}</Switch>
       </React.Fragment>
     );
   }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { PeopleOutlined as PeopleIcon } from "@material-ui/icons"
+import { PeopleOutlined as PeopleIcon } from "@material-ui/icons";
 import Main from "../../../component/main";
 import HeaderTitle from "../../../component/header_title";
 import { Helmet } from "react-helmet";
@@ -11,10 +11,10 @@ import { Divider, Typography, Box, Button, Snackbar } from "@material-ui/core";
 import UstudentCard from "../../../component/ustudent_card";
 import StudentCard from "../../../component/student_card";
 
-export default function StudentManagement(){
-  const loginUser = useSelector(state => {
-    return state.loginUser
-  })
+export default function StudentManagement() {
+  const loginUser = useSelector((state) => {
+    return state.loginUser;
+  });
   const [loadingStudents, setLoadingStudents] = useState(true);
 
   const [loadingUstudents, setLoadingUstudents] = useState(true);
@@ -26,17 +26,17 @@ export default function StudentManagement(){
   const [ustudents, setUstudents] = useState([]);
 
   const [ustdLoadable, setUstdLoadable] = useState(false);
-  
+
   const [sbMsg, setSbMsg] = useState(null);
 
   const limit = 3;
 
-  useEffect(()=>{
+  useEffect(() => {
     const token = getLoginToken();
 
-    getStudents(token, 0, limit, true).then(res => {
-      if(res.ok){
-        res.json().then(data => {
+    getStudents(token, 0, limit, true).then((res) => {
+      if (res.ok) {
+        res.json().then((data) => {
           const newStudents = data.students;
 
           const count = data.count;
@@ -46,17 +46,15 @@ export default function StudentManagement(){
           setStdLoadable(count > newStudents.length);
 
           setLoadingStudents(false);
-        })
-      }
-
-      else{
+        });
+      } else {
         setLoadingStudents(false);
       }
     });
 
-    getStudents(token, 0, limit, false).then(res => {
-      if(res.ok){
-        res.json().then(data => {
+    getStudents(token, 0, limit, false).then((res) => {
+      if (res.ok) {
+        res.json().then((data) => {
           const newUstudents = data.students;
 
           const count = data.count;
@@ -65,25 +63,27 @@ export default function StudentManagement(){
 
           setUstdLoadable(count > newUstudents.length);
 
-          setLoadingUstudents(false)
-        })
+          setLoadingUstudents(false);
+        });
+      } else {
+        setLoadingStudents(false);
       }
+    });
+  }, []);
 
-      else{
-        setLoadingStudents(false)
-      }
-    })
-  }, [])
+  const loadingElement = [];
 
-  const loadingElement = []
-
-  for(let i=0; i<limit; i++){
+  for (let i = 0; i < limit; i++) {
     loadingElement.push(
-      <Box my="10px" width={{
-        xs: "100%",
-        sm: "500px"
-      }} mx="auto">
-        <Skeleton variant="rect" height="60px"/>
+      <Box
+        my="10px"
+        width={{
+          xs: "100%",
+          sm: "500px",
+        }}
+        mx="auto"
+      >
+        <Skeleton variant="rect" height="60px" />
       </Box>
     );
   }
@@ -95,95 +95,109 @@ export default function StudentManagement(){
       </Helmet>
 
       <Main loginUser={loginUser}>
-        <HeaderTitle icon={<PeopleIcon fontSize="large" />}  title="Manajemen Murid"/>
+        <HeaderTitle
+          icon={<PeopleIcon fontSize="large" />}
+          title="Manajemen Murid"
+        />
 
         <Box mt="50px">
           <Box mb="20px">
             {students.map((value, index) => {
-                const _id = value._id;
+              const _id = value._id;
 
-                const fullname = value.user.fullname;
-                
-                return (
-                  <Box display="flex" justifyContent="center">
-                    <StudentCard key={_id} student={value} onKick={async () => {
-                      return await setStudent(getLoginToken(), _id, false).then(res => {
-                        if(res.ok){
-                          //update ustudents
-                          const limit = ustudents.length+1;
+              const fullname = value.user.fullname;
 
-                          getStudents(getLoginToken(), 0, limit, false).then(res =>{
-                            if(res.ok){
-                              res.json().then(data => {
-                                const count = data.count;
+              return (
+                <Box display="flex" justifyContent="center">
+                  <StudentCard
+                    key={_id}
+                    student={value}
+                    onKick={async () => {
+                      return await setStudent(getLoginToken(), _id, false).then(
+                        (res) => {
+                          if (res.ok) {
+                            //update ustudents
+                            const limit = ustudents.length + 1;
 
-                                const newUstudents = data.students;
+                            getStudents(getLoginToken(), 0, limit, false).then(
+                              (res) => {
+                                if (res.ok) {
+                                  res.json().then((data) => {
+                                    const count = data.count;
 
-                                setUstudents(newUstudents);
+                                    const newUstudents = data.students;
 
-                                setUstdLoadable(newUstudents.length < count);
+                                    setUstudents(newUstudents);
 
-                                setLoadingUstudents(false);
-                              })
-                            }
+                                    setUstdLoadable(
+                                      newUstudents.length < count
+                                    );
 
-                            else{
-                              setLoadingUstudents(false);
-                            }
-                          })
+                                    setLoadingUstudents(false);
+                                  });
+                                } else {
+                                  setLoadingUstudents(false);
+                                }
+                              }
+                            );
 
-                          setUstudents([]);
+                            setUstudents([]);
 
-                          setLoadingUstudents(true);
-                          //update ustudents end
+                            setLoadingUstudents(true);
+                            //update ustudents end
 
-                          //update students
-                          const newStudents = students.slice()
+                            //update students
+                            const newStudents = students.slice();
 
-                          newStudents.splice(index, 1);
+                            newStudents.splice(index, 1);
 
-                          setStudents(newStudents)
+                            setStudents(newStudents);
 
-                          setSbMsg(`${fullname} berhasil ditendang.`);
-                          //update students end
+                            setSbMsg(`${fullname} berhasil ditendang.`);
+                            //update students end
 
-                          return true;
+                            return true;
+                          } else {
+                            setSbMsg("Gagal menendang murid.");
+
+                            return false;
+                          }
                         }
-
-                        else{
-                          setSbMsg("Gagal menendang murid.")
-
-                          return false;
-                        }
-                      })
-                    }} />
-                  </Box>
-                )
-              })
-            }
-
-            {loadingStudents ? loadingElement : 
-              students.length <= 0 ? (
-                <Box mt="20px" mb="50px">
-                  <Typography align="center" gutterBottom>
-                    Murid Kosong.
-                  </Typography>
+                      );
+                    }}
+                  />
                 </Box>
-              ):null}
+              );
+            })}
+
+            {loadingStudents ? (
+              loadingElement
+            ) : students.length <= 0 ? (
+              <Box mt="20px" mb="50px">
+                <Typography align="center" gutterBottom>
+                  Murid Kosong.
+                </Typography>
+              </Box>
+            ) : null}
           </Box>
 
           {stdLoadable && !loadingStudents ? (
             <Box display="flex" justifyContent="center" alignContent="center">
-              <Button 
+              <Button
                 color="primary"
-                onClick={()=>{
+                onClick={() => {
                   const priorStudents = students.slice();
-                  
+
                   setLoadingStudents(true);
 
-                  getStudents(getLoginToken(), priorStudents.length, limit, true).then(res => {
-                    if(res.ok){
-                      res.json().then(data => {
+                  getStudents(
+                    getLoginToken(),
+                    priorStudents.length,
+                    limit,
+                    true
+                  ).then((res) => {
+                    if (res.ok) {
+                      res.json().then((data) => {
                         const newStudents = priorStudents.concat(data.students);
 
                         setStudents(newStudents);
@@ -191,13 +205,11 @@ export default function StudentManagement(){
                         setStdLoadable(newStudents.length < data.count);
 
                         setLoadingStudents(false);
-                      })
+                      });
+                    } else {
+                      setLoadingStudents(false);
                     }
-
-                    else{
-                      setLoadingStudents(false)
-                    }
-                  })
+                  });
                 }}
               >
                 MUAT LEBIH BANYAK
@@ -211,105 +223,116 @@ export default function StudentManagement(){
             </Typography>
           </Box>
 
-          <Divider/>
+          <Divider />
 
           <Box mb="20px" mt="10px">
-            {ustudents.map((value, index) => {   
+            {ustudents.map((value, index) => {
               const _id = value._id;
 
               const fullname = value.user.fullname;
 
               return (
                 <Box display="flex" justifyContent="center">
-                  <UstudentCard 
-                    key={_id} 
+                  <UstudentCard
+                    key={_id}
                     student={value}
-                    onAcc={async ()=>{
-                      return await setStudent(getLoginToken(), _id, true).then(res => {
-                        if(res.ok){
-                          //update students
-                          const limit = students.length+1;
-                          setStudents([])
-                          setLoadingStudents(true)
-                          getStudents(getLoginToken(), 0, limit, true).then(res => {
-                            if(res.ok){
-                              res.json().then(data => {
-                                const newStudents = data.students;
+                    onAcc={async () => {
+                      return await setStudent(getLoginToken(), _id, true).then(
+                        (res) => {
+                          if (res.ok) {
+                            //update students
+                            const limit = students.length + 1;
+                            setStudents([]);
+                            setLoadingStudents(true);
+                            getStudents(getLoginToken(), 0, limit, true).then(
+                              (res) => {
+                                if (res.ok) {
+                                  res.json().then((data) => {
+                                    const newStudents = data.students;
 
-                                const count = data.count;
+                                    const count = data.count;
 
-                                setStudents(newStudents);
+                                    setStudents(newStudents);
 
-                                setStdLoadable(newStudents.length < count)
+                                    setStdLoadable(newStudents.length < count);
 
-                                setLoadingStudents(false);
-                              })
-                            }
+                                    setLoadingStudents(false);
+                                  });
+                                } else {
+                                  setLoadingStudents(false);
+                                }
+                              }
+                            );
+                            //update students end
 
-                            else{
-                              setLoadingStudents(false)
-                            }
-                          })
-                          //update students end
+                            //update ustudents
+                            const newUstudents = ustudents.slice();
+                            newUstudents.splice(index, 1);
+                            setUstudents(newUstudents);
+                            //update ustudents end
 
-                          //update ustudents
-                          const newUstudents = ustudents.slice();
-                          newUstudents.splice(index, 1);
-                          setUstudents(newUstudents);
-                          //update ustudents end
+                            setSbMsg(`${fullname} diterima menjadi murid.`);
 
-                          setSbMsg(`${fullname} diterima menjadi murid.`);
-
-                          return true;
+                            return true;
+                          } else {
+                            setSbMsg(`Gagal menerima murid`);
+                            return false;
+                          }
                         }
-
-                        else{
-                          setSbMsg(`Gagal menerima murid`);
-                          return false;
-                        }
-                      })
+                      );
                     }}
                   />
                 </Box>
-              )
+              );
             })}
-          
-            {loadingUstudents ? loadingElement : 
-              ustudents.length <= 0 ? (
-                <Box pb="50px" mt="20px">
-                  <Typography gutterBottom align="center">
-                    Murid yang belum disetujui kosong.
-                  </Typography>
-                </Box>
-              ) : null}
+
+            {loadingUstudents ? (
+              loadingElement
+            ) : ustudents.length <= 0 ? (
+              <Box pb="50px" mt="20px">
+                <Typography gutterBottom align="center">
+                  Murid yang belum disetujui kosong.
+                </Typography>
+              </Box>
+            ) : null}
           </Box>
 
           {ustdLoadable && !loadingUstudents ? (
-            <Box display="flex" justifyContent="center" alignContent="center" pb="50px">
-              <Button 
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignContent="center"
+              pb="50px"
+            >
+              <Button
                 color="primary"
-                onClick={()=>{
+                onClick={() => {
                   const priorUstudents = ustudents.slice();
-                  
+
                   setLoadingUstudents(true);
 
-                  getStudents(getLoginToken(), priorUstudents.length, limit, false).then(res => {
-                    if(res.ok){
-                      res.json().then(data => {
-                        const newUstudents = priorUstudents.concat(data.students);
+                  getStudents(
+                    getLoginToken(),
+                    priorUstudents.length,
+                    limit,
+                    false
+                  ).then((res) => {
+                    if (res.ok) {
+                      res.json().then((data) => {
+                        const newUstudents = priorUstudents.concat(
+                          data.students
+                        );
 
                         setUstudents(newUstudents);
 
                         setUstdLoadable(newUstudents.length < data.count);
 
                         setLoadingUstudents(false);
-                      })
+                      });
+                    } else {
+                      setLoadingUstudents(false);
                     }
-
-                    else{
-                      setLoadingUstudents(false)
-                    }
-                  })
+                  });
                 }}
               >
                 MUAT LEBIH BANYAK
@@ -319,7 +342,7 @@ export default function StudentManagement(){
         </Box>
       </Main>
 
-      <Snackbar 
+      <Snackbar
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "right",
@@ -328,10 +351,10 @@ export default function StudentManagement(){
         open={sbMsg}
         key={sbMsg}
         autoHideDuration={6000}
-        onClose={()=>{
-          setSbMsg(null)
+        onClose={() => {
+          setSbMsg(null);
         }}
       />
     </React.Fragment>
   );
-} 
+}

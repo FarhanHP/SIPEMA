@@ -1,10 +1,21 @@
-import { Box, Grid, Paper, Typography, Avatar, makeStyles, Button, Tabs, Tab, Snackbar } from "@material-ui/core";
+import {
+  Box,
+  Grid,
+  Paper,
+  Typography,
+  Avatar,
+  makeStyles,
+  Button,
+  Tabs,
+  Tab,
+  Snackbar,
+} from "@material-ui/core";
 import { blueGrey } from "@material-ui/core/colors";
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
 import Main from "../../component/main";
-import {Link, Route, Switch} from "react-router-dom";
+import { Link, Route, Switch } from "react-router-dom";
 import moment from "moment";
 import MainProfile from "./main_profile";
 import ChangePassword from "../change_password";
@@ -13,39 +24,39 @@ import { getLoginToken } from "../../local_storage";
 import { login } from "../../actions";
 import { Skeleton } from "@material-ui/lab";
 
-const useStyles = makeStyles(theme => {
+const useStyles = makeStyles((theme) => {
   return {
     pp: {
       height: theme.spacing(15),
       width: theme.spacing(15),
-      fontSize: "80px"
+      fontSize: "80px",
     },
 
     inputContainer: {
-      '& > *': {
+      "& > *": {
         margin: theme.spacing(1),
-      }
+      },
     },
 
     input: {
-      display: "none"
+      display: "none",
     },
 
     photoSizeDesc: {
-      backgroundColor: blueGrey[100]
+      backgroundColor: blueGrey[100],
     },
 
     editProfileHeader: {
-      backgroundColor: blueGrey[100]
-    }
-  }
-})
+      backgroundColor: blueGrey[100],
+    },
+  };
+});
 
-export default function Profile(){
+export default function Profile() {
   const classes = useStyles();
 
-  const loginUser = useSelector(state => {
-    return state.loginUser
+  const loginUser = useSelector((state) => {
+    return state.loginUser;
   });
 
   const dispatch = useDispatch();
@@ -67,36 +78,32 @@ export default function Profile(){
   const handleChangePic = (event) => {
     const file = event.target.files[0];
 
-    const mbFileSize = ((file.size/1024)/1024).toFixed(4);
+    const mbFileSize = (file.size / 1024 / 1024).toFixed(4);
 
-    if(mbFileSize >= 10){
-      setSbMsg("Ukuran foto tidak boleh melebihi 10 MB.")
-    }
-
-    else{
+    if (mbFileSize >= 10) {
+      setSbMsg("Ukuran foto tidak boleh melebihi 10 MB.");
+    } else {
       setPpLoading(true);
 
-      changePp(getLoginToken(), file).then(res => {
-        if(res.ok){
-          res.json().then(data => {
+      changePp(getLoginToken(), file).then((res) => {
+        if (res.ok) {
+          res.json().then((data) => {
             loginUser.pp = data.pp;
 
-            dispatch(login(loginUser))
+            dispatch(login(loginUser));
 
             setPpLoading(false);
 
-            setSbMsg("Berhasil mengganti foto profil.")
-          })
-        }
-
-        else{
+            setSbMsg("Berhasil mengganti foto profil.");
+          });
+        } else {
           setPpLoading(false);
 
-          setSbMsg("Gagal mengganti foto profil.")
+          setSbMsg("Gagal mengganti foto profil.");
         }
-      })
+      });
     }
-  } 
+  };
 
   return (
     <React.Fragment>
@@ -119,8 +126,11 @@ export default function Profile(){
               <Box display="flex" width="100%" my="20px">
                 <Box mx="auto">
                   {ppLoading ? (
-                    <Skeleton height="120px" width="120px" variant="circle">
-                    </Skeleton>
+                    <Skeleton
+                      height="120px"
+                      width="120px"
+                      variant="circle"
+                    ></Skeleton>
                   ) : (
                     <Avatar src={pp} className={classes.pp}>
                       {fullname.charAt(0)}
@@ -131,22 +141,26 @@ export default function Profile(){
 
               <Box display="flex" width="100%" mb="20px">
                 <Box mx="auto" className={classes.inputContainer}>
-                  <input 
+                  <input
                     accept="image/*"
                     className={classes.input}
                     type="file"
                     id="contained-button-file"
                     onChange={handleChangePic}
                   />
-                  
+
                   <label htmlFor="contained-button-file">
-                    <Button variant="contained" color="primary" component="span">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      component="span"
+                    >
                       GANTI FOTO PROFIL
                     </Button>
                   </label>
                 </Box>
               </Box>
-            
+
               <Box p="10px" className={classes.photoSizeDesc} mb="20px">
                 <Typography align="center">
                   Ukuran foto maksimum: <b>10 MB</b>
@@ -165,28 +179,40 @@ export default function Profile(){
             <Box component={Paper}>
               <Box px="20px" className={classes.editProfileHeader}>
                 <Box py="40px">
-                  <Typography variant="h4">
-                    Edit Profil
-                  </Typography>
+                  <Typography variant="h4">Edit Profil</Typography>
                 </Box>
 
-                <Tabs indicatorColor="primary" value={location} onChange={(event, newValue) => {
-                  setLocation(newValue);
-                }} >
-                  <Tab label="Umum" component={Link} to="/profile" value="/profile" />
+                <Tabs
+                  indicatorColor="primary"
+                  value={location}
+                  onChange={(event, newValue) => {
+                    setLocation(newValue);
+                  }}
+                >
+                  <Tab
+                    label="Umum"
+                    component={Link}
+                    to="/profile"
+                    value="/profile"
+                  />
 
-                  <Tab label="Ganti Password" component={Link} to="/profile/password" value="/profile/password" />
+                  <Tab
+                    label="Ganti Password"
+                    component={Link}
+                    to="/profile/password"
+                    value="/profile/password"
+                  />
                 </Tabs>
               </Box>
-            
+
               <Box p="20px">
                 <Switch>
                   <Route path="/profile/password">
-                    <ChangePassword/>
+                    <ChangePassword />
                   </Route>
 
                   <Route path="/profile">
-                    <MainProfile/>
+                    <MainProfile />
                   </Route>
                 </Switch>
               </Box>
@@ -194,8 +220,8 @@ export default function Profile(){
           </Grid>
         </Grid>
       </Main>
-    
-      <Snackbar 
+
+      <Snackbar
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "right",
@@ -204,8 +230,8 @@ export default function Profile(){
         open={sbMsg}
         key={sbMsg}
         autoHideDuration={6000}
-        onClose={()=>{
-          setSbMsg(null)
+        onClose={() => {
+          setSbMsg(null);
         }}
       />
     </React.Fragment>

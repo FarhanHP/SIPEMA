@@ -5,10 +5,10 @@ import { setProfile } from "../../request/user";
 import { getLoginToken } from "../../local_storage";
 import { login } from "../../actions";
 
-export default function MainProfile(){
-  const loginUser = useSelector(state => {
+export default function MainProfile() {
+  const loginUser = useSelector((state) => {
     return state.loginUser;
-  })
+  });
 
   const dispatch = useDispatch();
 
@@ -24,61 +24,71 @@ export default function MainProfile(){
 
   const [sbMsg, setSbMsg] = useState(null);
 
-  const handleSubmit = ()=>{
+  const handleSubmit = () => {
     const newFullname = fullnameRef.current.value;
 
     setFullnameErr(null);
 
-    if(newFullname !== fullname){
-      if(newFullname.length <= 0){
-        setFullnameErr("Tidak boleh kosong.")
-      }
-
-      else{
+    if (newFullname !== fullname) {
+      if (newFullname.length <= 0) {
+        setFullnameErr("Tidak boleh kosong.");
+      } else {
         setLoading(true);
 
-        setProfile(getLoginToken(), newFullname).then(res => {
-          if(res.ok){
+        setProfile(getLoginToken(), newFullname).then((res) => {
+          if (res.ok) {
             loginUser.fullname = newFullname;
 
             dispatch(login(loginUser));
 
-            setSbMsg("Berhasil mengedit profil anda.")
-          } 
-
-          else{
-            setSbMsg("Gagal mengedit profil anda.")
+            setSbMsg("Berhasil mengedit profil anda.");
+          } else {
+            setSbMsg("Gagal mengedit profil anda.");
           }
 
-          setLoading(false)
-        })
+          setLoading(false);
+        });
       }
     }
-  }
+  };
 
   return (
     <React.Fragment>
       <Box mt="50px">
-        <TextField fullWidth label="Nama Lengkap" placeholder="Masukan nama lengkap anda..." defaultValue={fullname} error={fullnameErr} helperText={fullnameErr} inputRef={fullnameRef} onKeyUp={event => {
-          if(event.keyCode === 13){
-            event.preventDefault();
+        <TextField
+          fullWidth
+          label="Nama Lengkap"
+          placeholder="Masukan nama lengkap anda..."
+          defaultValue={fullname}
+          error={fullnameErr}
+          helperText={fullnameErr}
+          inputRef={fullnameRef}
+          onKeyUp={(event) => {
+            if (event.keyCode === 13) {
+              event.preventDefault();
 
-            handleSubmit();
-          }
-        }} />
+              handleSubmit();
+            }
+          }}
+        />
       </Box>
 
       <Box mt="30px" mb="50px">
         <TextField fullWidth label="Email" disabled value={email} />
       </Box>
 
-      <Box display="flex" mb="30px" flexDirection="row-reverse" >
-        <Button color="primary" variant="contained" disabled={loading} onClick={handleSubmit} >
+      <Box display="flex" mb="30px" flexDirection="row-reverse">
+        <Button
+          color="primary"
+          variant="contained"
+          disabled={loading}
+          onClick={handleSubmit}
+        >
           {loading ? "MENGUBAH..." : "UBAH"}
         </Button>
       </Box>
 
-      <Snackbar 
+      <Snackbar
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "right",
@@ -87,8 +97,8 @@ export default function MainProfile(){
         open={sbMsg}
         key={sbMsg}
         autoHideDuration={6000}
-        onClose={()=>{
-          setSbMsg(null)
+        onClose={() => {
+          setSbMsg(null);
         }}
       />
     </React.Fragment>

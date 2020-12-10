@@ -1,33 +1,51 @@
 import React from "react";
-import {List, ListItemText, ListItem, ListItemIcon, makeStyles} from "@material-ui/core";
-import {AnnouncementOutlined as AnnouncementIcon, PeopleOutlined as PeopleIcon, AttachMoney as AttachMoneyIcon, History as HistoryIcon} from "@material-ui/icons";
-import {blueGrey} from "@material-ui/core/colors";
-import {NavLink} from "react-router-dom";
+import {
+  List,
+  ListItemText,
+  ListItem,
+  ListItemIcon,
+  makeStyles,
+} from "@material-ui/core";
+import {
+  AnnouncementOutlined as AnnouncementIcon,
+  PeopleOutlined as PeopleIcon,
+  AttachMoney as AttachMoneyIcon,
+  History as HistoryIcon,
+} from "@material-ui/icons";
+import { blueGrey } from "@material-ui/core/colors";
+import { NavLink } from "react-router-dom";
 
-const useStyles = makeStyles(()=>{
+const useStyles = makeStyles(() => {
   return {
     listBtn: {
       color: "black",
-      fontWeight: "bold"
+      fontWeight: "bold",
     },
 
     listItemIcon: {
-      color: "black"
+      color: "black",
     },
 
     activeLink: {
       backgroundColor: blueGrey[100],
-      borderRadius: "0 20px 20px 0"
-    }
-  }
-})
+      borderRadius: "0 20px 20px 0",
+    },
+  };
+});
 
-export default function TeacherLinks(){
+export default function TeacherLinks() {
   const classes = useStyles();
 
   return (
     <List>
-      <ListItem button className={classes.listBtn} component={NavLink} exact to="/" activeClassName={classes.activeLink}>
+      <ListItem
+        button
+        className={classes.listBtn}
+        component={NavLink}
+        exact
+        to="/"
+        activeClassName={classes.activeLink}
+      >
         <ListItemIcon className={classes.listItemIcon}>
           <AnnouncementIcon />
         </ListItemIcon>
@@ -35,7 +53,13 @@ export default function TeacherLinks(){
         <ListItemText primary="Pengumuman" />
       </ListItem>
 
-      <ListItem button className={classes.listBtn} component={NavLink} to="/students" activeClassName={classes.activeLink}>
+      <ListItem
+        button
+        className={classes.listBtn}
+        component={NavLink}
+        to="/students"
+        activeClassName={classes.activeLink}
+      >
         <ListItemIcon className={classes.listItemIcon}>
           <PeopleIcon />
         </ListItemIcon>
@@ -43,7 +67,13 @@ export default function TeacherLinks(){
         <ListItemText primary="Manajemen Murid" />
       </ListItem>
 
-      <ListItem button className={classes.listBtn} component={NavLink} to="/payment" activeClassName={classes.activeLink}>
+      <ListItem
+        button
+        className={classes.listBtn}
+        component={NavLink}
+        to="/payment"
+        activeClassName={classes.activeLink}
+      >
         <ListItemIcon className={classes.listItemIcon}>
           <AttachMoneyIcon />
         </ListItemIcon>
@@ -51,7 +81,13 @@ export default function TeacherLinks(){
         <ListItemText primary="Riwayat Pembayaran Murid" />
       </ListItem>
 
-      <ListItem button className={classes.listBtn} component={NavLink} to="/log" activeClassName={classes.activeLink}>
+      <ListItem
+        button
+        className={classes.listBtn}
+        component={NavLink}
+        to="/log"
+        activeClassName={classes.activeLink}
+      >
         <ListItemIcon className={classes.listItemIcon}>
           <HistoryIcon />
         </ListItemIcon>

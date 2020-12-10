@@ -1,96 +1,112 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { useSelector } from "react-redux";
-import { History as HistoryIcon } from "@material-ui/icons"
+import { History as HistoryIcon } from "@material-ui/icons";
 import Main from "../../../component/main";
 import HeaderTitle from "../../../component/header_title";
 import { Helmet } from "react-helmet";
 import { getLogs } from "../../../request/log";
-import { Skeleton, Timeline, TimelineConnector, TimelineDot, TimelineItem, TimelineSeparator, TimelineContent } from "@material-ui/lab";
+import {
+  Skeleton,
+  Timeline,
+  TimelineConnector,
+  TimelineDot,
+  TimelineItem,
+  TimelineSeparator,
+  TimelineContent,
+} from "@material-ui/lab";
 import { getLoginToken } from "../../../local_storage";
-import { Avatar, Box, Button, Chip, makeStyles, Paper, Typography, withStyles } from "@material-ui/core";
+import {
+  Avatar,
+  Box,
+  Button,
+  Chip,
+  makeStyles,
+  Paper,
+  Typography,
+  withStyles,
+} from "@material-ui/core";
 import moment from "moment";
 
 const FTimelineItem = withStyles({
   missingOppositeContent: {
     "&:before": {
-      display: "none"
-    }
-  }
+      display: "none",
+    },
+  },
 })(TimelineItem);
 
-const useStyles = makeStyles(()=>{
+const useStyles = makeStyles(() => {
   return {
     time: {
       color: "grey",
-      fontSize: "0.9rem"
-    }
-  }
-})
+      fontSize: "0.9rem",
+    },
+  };
+});
 
-export default function ActivityLog(){
+export default function ActivityLog() {
   const classes = useStyles();
 
-  const loginUser = useSelector(state => {
-    return state.loginUser
-  })
+  const loginUser = useSelector((state) => {
+    return state.loginUser;
+  });
 
-  const [logs, setLogs] = useState([])
+  const [logs, setLogs] = useState([]);
 
   const [loading, setLoading] = useState(true);
 
   const [loadable, setLoadable] = useState(false);
 
-  const loadingElement = []
+  const loadingElement = [];
 
-  for(let i=0; i<10; i++){
+  for (let i = 0; i < 10; i++) {
     loadingElement.push(
-    <Box my="10px">
-      <Skeleton variant="rect" height="60px" width="100%" />
-    </Box>
+      <Box my="10px">
+        <Skeleton variant="rect" height="60px" width="100%" />
+      </Box>
     );
   }
 
-  useEffect(()=>{
-    getLogs(getLoginToken(), 0, 10).then(res => {
-      if(res.ok){
-        res.json().then(data =>{
-          setLogs(data.logs)
+  useEffect(() => {
+    getLogs(getLoginToken(), 0, 10).then((res) => {
+      if (res.ok) {
+        res.json().then((data) => {
+          setLogs(data.logs);
 
           const total = data.total;
 
-          setLoadable(data.logs.length < total)
+          setLoadable(data.logs.length < total);
 
-          setLoading(false)
-        })
-      }
-
-      else{
+          setLoading(false);
+        });
+      } else {
         setLoading(false);
       }
-    })
-  }, [])
+    });
+  }, []);
 
   let currentDate = null;
 
   return (
     <Fragment>
       <Helmet>
-        <title>
-          Aktivitas Pengguna SIPEMA
-        </title>
+        <title>Aktivitas Pengguna SIPEMA</title>
       </Helmet>
 
       <Main loginUser={loginUser}>
-        <HeaderTitle icon={<HistoryIcon fontSize="large" />}  title="Log Aktivitas Pengguna"/>
+        <HeaderTitle
+          icon={<HistoryIcon fontSize="large" />}
+          title="Log Aktivitas Pengguna"
+        />
 
-        <Box 
+        <Box
           pl={{
             xs: 0,
-            lg: "100px"
+            lg: "100px",
           }}
           mt="50px"
         >
-          <Timeline >
+          <Timeline>
             {logs.map((value, index, array) => {
               const created = value.created;
 
@@ -104,7 +120,7 @@ export default function ActivityLog(){
 
               let dateChange = false;
 
-              if(currentDate !== date ){
+              if (currentDate !== date) {
                 currentDate = date;
                 dateChange = true;
               }
@@ -119,18 +135,23 @@ export default function ActivityLog(){
 
                   <FTimelineItem key={value._id}>
                     <TimelineSeparator>
-                      <TimelineDot/>
+                      <TimelineDot />
 
-                      {array.length - 1 === index ? null : <TimelineConnector/>}
+                      {array.length - 1 === index ? null : (
+                        <TimelineConnector />
+                      )}
                     </TimelineSeparator>
 
                     <TimelineContent>
-                      <Box display="flex" component={Paper} elevation={3} p="10px">
+                      <Box
+                        display="flex"
+                        component={Paper}
+                        elevation={3}
+                        p="10px"
+                      >
                         <Box width="100%" display="flex">
                           <Box display="flex" alignItems="center" mr="10px">
-                            <Avatar src={pp}>
-                              {fullname.charAt(0)}
-                            </Avatar>
+                            <Avatar src={pp}>{fullname.charAt(0)}</Avatar>
                           </Box>
 
                           <Box display="flex" alignItems="center">
@@ -149,44 +170,40 @@ export default function ActivityLog(){
                     </TimelineContent>
                   </FTimelineItem>
                 </Fragment>
-              )
+              );
             })}
 
-            {loading ? (
-              loadingElement
-            ) : null}
+            {loading ? loadingElement : null}
           </Timeline>
 
           {!loading && loadable ? (
             <Box width="100%" display="flex" justifyContent="center" pb="50px">
-              <Button 
+              <Button
                 color="primary"
-                onClick={()=>{
+                onClick={() => {
                   setLoading(true);
 
                   const start = logs.length - 1;
 
-                  getLogs(getLoginToken(), start, 10).then(res => {
-                    if(res.ok){
-                      res.json().then(data => {
-                        const total = data.total
+                  getLogs(getLoginToken(), start, 10).then((res) => {
+                    if (res.ok) {
+                      res.json().then((data) => {
+                        const total = data.total;
 
                         let newLogs = logs.slice();
 
                         newLogs = newLogs.concat(data.logs);
 
-                        setLoadable(newLogs.length < total)
+                        setLoadable(newLogs.length < total);
 
                         setLogs(newLogs);
 
                         setLoading(false);
-                      })
-                    }
-
-                    else{
+                      });
+                    } else {
                       setLoading(false);
                     }
-                  })
+                  });
                 }}
               >
                 MUAT LEBIH BANYAK

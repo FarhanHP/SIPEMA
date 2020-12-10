@@ -77,27 +77,42 @@ export const logout = (token) => {
 };
 
 export const setProfile = (token, fullname) => {
-  return requestJson(`${baseUrl}b/user/profile/set`, "PUT", {
-    "Content-Type": "application/json",
-    "token" : token
-  }, {fullname})
-}
+  return requestJson(
+    `${baseUrl}b/user/profile/set`,
+    "PUT",
+    {
+      "Content-Type": "application/json",
+      token: token,
+    },
+    { fullname }
+  );
+};
 
 export const changePass = (token, oldPass, newPass) => {
-  return requestJson(`${baseUrl}b/user/password/set`, "PUT", {
-    "Content-Type": "application/json",
-    "token" : token
-  }, {
-    old_password : oldPass,
-    new_password : newPass
-  })
-}
+  return requestJson(
+    `${baseUrl}b/user/password/set`,
+    "PUT",
+    {
+      "Content-Type": "application/json",
+      token: token,
+    },
+    {
+      old_password: oldPass,
+      new_password: newPass,
+    }
+  );
+};
 
 export const changePp = (token, photo) => {
-  const form = new FormData()
-  form.append("photo", photo)
+  const form = new FormData();
+  form.append("photo", photo);
 
-  return request(`${baseUrl}b/user/profile/picture/set`, "PUT", {
-    token
-  }, form)
-}
+  return request(
+    `${baseUrl}b/user/profile/picture/set`,
+    "PUT",
+    {
+      token,
+    },
+    form
+  );
+};
