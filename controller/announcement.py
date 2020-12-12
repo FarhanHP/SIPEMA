@@ -158,6 +158,12 @@ def deleteAnnouncement(announcementId):
                     res = db["announcement"].delete_one({"_id" : announcementId})
 
                     if(res.matched_count == 1):
+                        db["log"].insert_one({
+                            "user_id" : userId,
+                            "desc" : "menghapus pengumuman.",
+                            "created" : time.time()
+                        })
+
                         return Response(status=200)
 
                     else:
