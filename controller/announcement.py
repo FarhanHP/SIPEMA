@@ -2,102 +2,171 @@ from flask import Blueprint, Response, request
 from model import get_db
 from setting import tokenExpire
 from bson.objectid import ObjectId
+from bson.errors import InvalidId
 import time
 
 announcementController = Blueprint("announcementController", __name__)
 
-@announcementController.route("/announcement", methods = ["GET", "POST", "PUT", "DELETE"])
-def announcement():
-    db = get_db()
+@announcementController.route("/get/<start>/<limit>", methods=["GET"])
+def getAnnouncements(start, limit):
+    try:
+        start = int(start)
+        limit = int(limit)
+        db = get_db()
+
+        announcements = db["announcement"].find().sort("created", -1).skip(start).limit(limit)
+
+        output = []
+
+        for i in announcements:
+            output.append({
+                "_id" : str(i["_id"]),
+                "title" : i["title"],
+                "body" : i["body"],
+                "created" : i["created"]
+            })
+
+        return {"announcements" : output}
+
+    except Exception as e:
+        print(e)
+
+        return Response(status=500, response=e)
+
+#teacher login required
+@announcementController.route("/create", methods=["POST"])
+def createAnnouncement():
     try:
         if("token" in request.headers):
             token = request.headers["token"]
 
-        loginToken = db["token"].find_one({
-            "token" : token
-          })
-        
-        if(loginToken is None):
-            return {"msg": "unrecognized token", status = 400}
-        
+            db = get_db()
+
+            loginToken = db["token"].find_one({
+                "token" : token
+            })
+
+            currentTime = time.time()
+
+            if(loginToken is not None and loginToken["expire"] > currentTime):
+                userId = loginToken["user_id"]
+
+                teacher = db["teacher"].find_one({"user_id" : userId})
+
+                if(teacher is not None):
+                    data = request.get_json()
+
+                    announcementId = ObjectId()
+
+                    announcement = {
+                        "_id" : announcementId,
+                        "title" : data["title"],
+                        "teacher_id" : teacher["_id"],
+                        "body" : data["body"],
+                        "created" : time.time()
+                    }
+
+                    db["announcement"].insert_one(announcement)
+
+                    db["log"].insert_one({
+                        "user_id" : userId,
+                        "desc" : "membuat pengumuman.",
+                        "created" : time.time()
+                    })
+
+                    return Response(status=200)
+
+        return Response(status=401)
+
     except Exception as e:
         print(e)
+
         return Response(status=500, response=e)
-    
-    if (request.method == "GET"):
 
-        data = db["announcement"].find()
+@announcementController.route("/edit/<announcementId>", methods=["PUT"])
+def editAnnouncement(announcementId):
+    try:
+        try:
+            announcementId = ObjectId(announcementId)
+        except InvalidId:
+            return Response(status=404)
 
-        return {"msg": "success", "result": data}
+        if("token" in request.headers):
+            token = request.headers["token"]
+            
+            currentTime = time.time()
+            
+            db = get_db()
+            
+            loginToken = db["token"].find_one({
+                "token" : token
+            })
 
-    if (request.method == "POST"):
+            if(loginToken is not None and loginToken["expire"] > currentTime):
+                userId = loginToken["user_id"]
 
-        inpData = request.get_json()
+                teacher = db["teacher"].find_one({"user_id" : userId})
 
-        generatedID = ObjectId()
+                if(teacher is not None):
+                    data = request.get_json()
 
-        created = time.time()
+                    res = db["announcement"].update_one({"_id" : announcementId, "$set" : data})
 
-        result = db["announcement"].insert_one({"_id": generatedID,
-                                       "teacher_id": inpData["teacher_id"],
-                                       "title": inpData["title"],
-                                       "body": inpData["body"],
-                                       "public": inpData["public"],
-                                       "created": created})
+                    if(res.matched_count == 1):
+                        db["log"].insert_one({
+                            "user_id" : userId,
+                            "desc" : "menyunting pengumuman.",
+                            "created" : time.time()
+                        })
 
-        #logging##############
-        db["log"].insert_one({"_id": ObjectId(),
-                              "user_id": loginToken["user_id"],
-                              "desc": "POST-ed announcement: " + str({"teacher_id": inpData["teacher_id"],
-                                       "title": inpData["title"],
-                                       "body": inpData["body"],
-                                       "public": inpData["public"],
-                                       "created": created}),
-                              "created": created
-                              })
-        #end logging##########
-        
-        return {"msg": "success", "result": result}
+                        return Response(status=200)
+                    
+                    else:
+                        return Response(status=404)
 
-    if (request.method == "PUT"):
+        return Response(status=401)
 
-        inpData = request.get_json()
+    except Exception as e:
+        print(e)
 
-        targetID = inpData["_id"]
+        return Response(status=500, response=e)
 
-        result = db["announcement"].update_one({"_id": targetID}, {"$set": inpData})
+@announcementController.route("/delete/<announcementId>", methods=["DELETE"])
+def deleteAnnouncement(announcementId):
+    try:
+        try:
+            announcementId = ObjectId(announcementId)
 
-        if (result.matched_count == 0):
-            return Response(response = "target id not found", status = 400)
+        except InvalidId:
+            return Response(status=404)
 
-        #logging##############
-        db["log"].insert_one({"_id": ObjectId(),
-                              "user_id": loginToken["user_id"],
-                              "desc": "PUT-ed announcement: " + str(inpData)),
-                              "created": created
-                              })
-        #end logging##########
-        
-        return {"msg": "success", "result": result}
+        if("token" in request.headers):
+            token = request.headers["token"]
 
-    if (request.method == "DELETE"):
+            loginToken = db["token"].find_one({"token" : token})
 
-        inpData = request.get_json()
+            currentTime = time.time()
 
-        result = db["announcement"].delete_one({"_id": inpData["_id"]})
+            db = get_db()
 
-        if (result.deleted_count == 0):
-            return Response(response = "target id not found", status = 400)
+            if(loginToken is not None and loginToken["expire"] > currentTime):
+                userId = loginToken["user_id"]
 
-        #logging##############
-        db["log"].insert_one({"_id": ObjectId(),
-                              "user_id": loginToken["user_id"],
-                              "desc": "DELETE-ed announcement",
-                              "created": created
-                              })
-        #end logging##########
-        
-        return {"msg": "success", "result": result}
+                teacher = db["teacher"].find_one({"user_id" : userId})
 
+                if(teacher is not None):
+                    res = db["announcement"].delete_one({"_id" : announcementId})
 
-    return {"msg": "unrecognized method", status = 405}
+                    if(res.matched_count == 1):
+                        return Response(status=200)
+
+                    else:
+                        return Response(status=404)
+
+        return Response(status=401)
+
+    except Exception as e:
+        print(e)
+
+        return Response(status=500, response=e)
+#teacher login required end
