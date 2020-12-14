@@ -4,3 +4,19 @@ export const isEmail = (email) => {
 
   return email.match(regex);
 };
+
+export const renderBody = body => {
+  const arrBody = body.split("\n")
+
+  const output = []
+
+  for(let i of arrBody){
+    output.push(i);
+
+    output.push(<br/>);
+  }
+
+  output.pop();
+
+  return output
+}

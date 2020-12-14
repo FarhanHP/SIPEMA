@@ -15,6 +15,7 @@ import StudentPayment from "./teacher/student_payment";
 import StudentDashboard from "./student/StudentLayout";
 
 import Profile from "./profile";
+import AnnouncementDetail from "./teacher/announcement_detail";
 
 export default function Main() {
   const history = useHistory();
@@ -64,13 +65,18 @@ export default function Main() {
           </Route>
         );
       }
-      routes = [
-        <Route path="/">
-          <StudentDashboard />
-        </Route>,
-      ];
+      else{
+        routes = [
+          <Route path="/">
+            <StudentDashboard />
+          </Route>
+        ];
+      }
     } else if (loginUser.role === "teacher") {
       routes = [
+        <Route path="/a/:announcementId">
+          <AnnouncementDetail/>
+        </Route>,
         <Route path="/students">
           <StudentManagement />
         </Route>,
@@ -88,14 +94,16 @@ export default function Main() {
         </Route>,
       ];
     }
-    // console.log(routes);
+
     return (
       <React.Fragment>
         <Helmet>
           <title>SIPEMA</title>
         </Helmet>
 
-        <Switch>{routes}</Switch>
+        <Switch>
+          {routes}
+        </Switch>
       </React.Fragment>
     );
   }

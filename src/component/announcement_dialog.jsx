@@ -1,9 +1,14 @@
 import { createRef, useState, Fragment } from "react";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@material-ui/core"
+import { Box, Button, DialogActions, DialogContent, DialogTitle, TextField } from "@material-ui/core"
 
-export default function CreateAnnouncementDialog(props){
+export default function AnnouncementDialog(props){
   const titleRef =  createRef();
   const descRef = createRef();
+  const headerTitle = props.headerTitle;
+  const btnName = props.btnName;
+
+  const defaultTitle = props.defaultTitle;
+  const defaultBody = props.defaultBody;
 
   const [titleErr, setTitleErr] = useState(null);
   const [descErr, setDescErr] = useState(null);
@@ -42,7 +47,7 @@ export default function CreateAnnouncementDialog(props){
   return (
     <Fragment>
       <DialogTitle>
-        Membuat Pengumuman
+        {headerTitle}
       </DialogTitle>
 
       <DialogContent>
@@ -52,7 +57,11 @@ export default function CreateAnnouncementDialog(props){
           helperText={titleErr}
           label="Judul"
           placeholder="Masukan judul pengumuman..."
+          defaultValue={defaultTitle}
+          fullWidth
         />
+
+        <Box my="20px"/>
 
         <TextField
           inputRef={descRef}
@@ -61,12 +70,14 @@ export default function CreateAnnouncementDialog(props){
           label="Isi Pengumuman"
           placeholder="Masukan isi pengumuman..."
           multiline
+          defaultValue={defaultBody}
+          fullWidth
         />
       </DialogContent>
 
       <DialogActions>
         <Button color="primary" disabled={loading} onClick={handleSubmit}>
-          {loading ? "MEMBUAT..." : "BUAT"}
+          {loading ? btnName.loading : btnName.normal}
         </Button>
       </DialogActions>
     </Fragment>
