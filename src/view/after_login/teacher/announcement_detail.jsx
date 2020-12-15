@@ -111,7 +111,9 @@ export default function AnnouncementDetail(){
                 <MenuItem 
                   component={Button} 
                   onClick={()=>{
-                    setOpenDialog(true)
+                    setOpenDialog(true);
+
+                    setAnchorEl(null);
                   }}
                 >
                   EDIT
