@@ -2,10 +2,13 @@ from flask import Flask, g, render_template
 from flask_cors import CORS
 from pymongo import MongoClient
 from setting import secretKey, cloudinarySetting
+
 from controller.user import userController
 from controller.student import studentController
 from controller.log import logController
 from controller.announcement import announcementController
+from controller.payment import paymentController
+
 import cloudinary
 
 cloudinary.config(
@@ -26,6 +29,7 @@ app.register_blueprint(userController, url_prefix="/b/user")
 app.register_blueprint(studentController, url_prefix="/b/student")
 app.register_blueprint(logController, url_prefix="/b/log")
 app.register_blueprint(announcementController, url_prefix="/b/announcement")
+app.register_blueprint(paymentController, url_prefix="/b/payment")
 
 @app.teardown_appcontext
 def teardown_db(a):
