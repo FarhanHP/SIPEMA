@@ -8,6 +8,7 @@ from controller.student import studentController
 from controller.log import logController
 from controller.announcement import announcementController
 from controller.payment import paymentController
+from controller.progress import progressController
 
 import cloudinary
 
@@ -30,6 +31,7 @@ app.register_blueprint(studentController, url_prefix="/b/student")
 app.register_blueprint(logController, url_prefix="/b/log")
 app.register_blueprint(announcementController, url_prefix="/b/announcement")
 app.register_blueprint(paymentController, url_prefix="/b/payment")
+app.register_blueprint(progressController, url_prefix="/b/progress")
 
 @app.teardown_appcontext
 def teardown_db(a):

@@ -118,3 +118,46 @@ def getStudents(start, limit, approved):
 
     return Response(status=500, response=e)
 #teacher login required end
+
+#teacher or student involved login required
+@studentController.route("/get/<studentId>", methods=["GET"])
+def getStudent(studentId):
+  try:
+    try:
+      studentId = ObjectId(studentId)
+    
+    except InvalidId:
+      return Response(status=404)
+
+    if("token" in request.headers):
+      token = request.headers["token"]
+      db = get_db()
+      loginToken = db["token"].find_one({"token" : token})
+      currentTime = time.time()
+
+      if(loginToken is not None and loginToken["expire"] > currentTime):
+        userId = loginToken["user_id"]
+        teacher = db["teacher"].find_one({"user_id" : userId})
+        student = db["student"].find_one({"_id" : studentId})
+
+        if(teacher is not None or (student is not None and student["user_id"] == userId)):
+          studentUserId = student["user_id"]
+          user = db["user"].find_one({"_id" : studentUserId})
+
+          if(user is not None):
+            return {
+              "fullname" : user["fullname"],
+              "email" : user["email"],
+              "created" : user["created"],
+              "pp" : user["pp"] if "pp" in user else None
+            }
+
+          else:
+            return Response(status=404)
+
+    return Response(status=401)
+
+  except Exception as e:
+    print(e)
+
+    return Response(status=500, response=e)
