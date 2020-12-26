@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
-import { Route, useHistory, Switch, Redirect } from "react-router-dom";
+import { Route, useHistory, Switch } from "react-router-dom";
 import { login } from "../../actions";
 import { getLoginToken } from "../../local_storage";
 import { getProfile } from "../../request/user";
@@ -16,6 +16,7 @@ import StudentDashboard from "./student/StudentLayout";
 
 import Profile from "./profile";
 import AnnouncementDetail from "./teacher/announcement_detail";
+import StudentDetail from "./teacher/student_detail/index";
 
 export default function Main() {
   const history = useHistory();
@@ -58,7 +59,7 @@ export default function Main() {
     let routes = null;
 
     if (loginUser.role === "student") {
-      if (!loginUser.approved) {
+      if (!loginUser.approved_student) {
         routes = (
           <Route path="/">
             <NotApproved />
@@ -76,6 +77,9 @@ export default function Main() {
       routes = [
         <Route path="/a/:announcementId">
           <AnnouncementDetail/>
+        </Route>,
+        <Route path="/s/:studentId">
+          <StudentDetail />
         </Route>,
         <Route path="/students">
           <StudentManagement />

@@ -9,6 +9,14 @@ export const getStudents = (token, start, limit, approved) => {
   );
 };
 
+export const getStudent = (studentId, token) => {
+  return request(
+    `${baseUrl}b/student/get/${studentId}`,
+    "GET",
+    {token}
+  );
+}
+
 export const setStudent = (token, studentId, approved) => {
   return requestJson(
     `${baseUrl}b/student/set/${studentId}`,

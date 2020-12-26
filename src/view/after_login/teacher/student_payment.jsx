@@ -10,11 +10,19 @@ import { getLoginToken } from "../../../local_storage";
 import { Skeleton } from "@material-ui/lab";
 import { renderPrice } from "../../../utils";
 import moment from "moment";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(()=>{
   return {
     paymentSum: {
       backgroundColor: blueGrey[100]
+    },
+    greyColor:{
+      color: "grey"
+    },
+    link: {
+      color: "black",
+      textDecoration: "none"
     }
   }
 })
@@ -106,19 +114,22 @@ export default function StudentPayment() {
               {payments.map((value) => {
                 const student = value.student;
                 const fullname = student.fullname;
+                const studentId = student.student_id;
 
                 const _id = value._id;
                 const amount = value.amount;
-                const created = value.created;
+                const tanggal = value.tanggal;
 
                 return (
                   <Box key={_id} component={Paper} elevation={3} p="15px" mb="20px">
-                    <Typography gutterBottom>
-                      <b>{fullname}</b>&nbsp;Rp{renderPrice(amount)}
-                    </Typography>
+                    <Link to={`/s/${studentId}/pembayaran`} className={classes.link}>
+                      <Typography gutterBottom>
+                        <b>{fullname}</b>&nbsp;Rp{renderPrice(amount)}
+                      </Typography>
+                    </Link>
 
-                    <Typography gutterBottom>
-                      {moment.unix(created).format("llll")}
+                    <Typography gutterBottom className={classes.greyColor}>
+                      {moment.unix(tanggal).format("ll")}
                     </Typography>
                   </Box>
                 );

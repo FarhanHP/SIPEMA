@@ -11,6 +11,7 @@ import {
   Button,
 } from "@material-ui/core";
 import { MoreVert as MoreVertIcon } from "@material-ui/icons";
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme) => {
 
 export default function StudentCard(props) {
   const student = props.student;
-
+  const _id = student._id;
   const pp = student.user.pp;
   const fullname = student.user.fullname;
 
@@ -92,7 +93,7 @@ export default function StudentCard(props) {
             setAnchorEl(null);
           }}
         >
-          <MenuItem>Lihat Detil</MenuItem>
+          <MenuItem component={Link} to={`/s/${_id}`}>Lihat Detil</MenuItem>
 
           <MenuItem component={Button} disabled={kicking} onClick={onKick}>
             {kicking ? "MENENDANG..." : "TENDANG"}
