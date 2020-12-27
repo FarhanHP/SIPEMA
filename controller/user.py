@@ -354,6 +354,7 @@ def getProfile():
           "fullname" : user["fullname"],
           "email" : user["email"],
           "role" : "teacher" if isTeacher else "student",
+          "student_id" : str(student["_id"]) if not isTeacher else None,
           "approved_student" : approved,
           "created" : user["created"],
           "pp" : user["pp"] if "pp" in user else None
