@@ -1,6 +1,6 @@
 import { Box, Divider, makeStyles } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
-import {Fragment} from "react";
+import { Fragment } from "react";
 
 const useStyles = makeStyles(theme => {
   return {
@@ -9,12 +9,12 @@ const useStyles = makeStyles(theme => {
       width: theme.spacing(5),
       marginRight: "10px",
       marginTop: "auto",
-      marginBottom: "auto"
-    }
-  }
-})
+      marginBottom: "auto",
+    },
+  };
+});
 
-export default function AnnouncementDetailLoading(props){
+export default function AnnouncementDetailLoading(props) {
   const classes = useStyles();
 
   const paragraphsCount = props.paragraphsCount;
@@ -35,10 +35,10 @@ export default function AnnouncementDetailLoading(props){
     </Fragment>
   );
 
-  const paragraphs = []
+  const paragraphs = [];
 
-  for(let i=0; i<paragraphsCount; i++){
-    paragraphs.push(paragraph)
+  for (let i = 0; i < paragraphsCount; i++) {
+    paragraphs.push(paragraph);
   }
 
   return (
@@ -54,12 +54,12 @@ export default function AnnouncementDetailLoading(props){
       </Box>
 
       <Box my="20px">
-        <Divider/>
+        <Divider />
       </Box>
 
       <Box display="flex" flexDirection="column">
         <Box mx="auto" mb="40px">
-          <Skeleton width="200px" height="32px"/>
+          <Skeleton width="200px" height="32px" />
         </Box>
 
         {paragraphs}

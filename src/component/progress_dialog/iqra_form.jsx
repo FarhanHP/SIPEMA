@@ -1,6 +1,6 @@
-import {Grid, TextField } from "@material-ui/core";
+import { Grid, TextField } from "@material-ui/core";
 
-export default function IqraForm(props){
+export default function IqraForm(props) {
   const halAwalDefaultValue = props.halAwalDefaultValue;
   const halAkhirDefaultValue = props.halAkhirDefaultValue;
 
@@ -15,10 +15,10 @@ export default function IqraForm(props){
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sm={6}>
-        <TextField 
-          fullWidth 
-          label="Halaman Awal" 
-          error={halAwalErr} 
+        <TextField
+          fullWidth
+          label="Halaman Awal"
+          error={halAwalErr}
           helperText={halAwalErr}
           inputRef={halAwalRef}
           defaultValue={halAwalDefaultValue ? halAwalDefaultValue : 0}
@@ -28,10 +28,10 @@ export default function IqraForm(props){
       </Grid>
 
       <Grid item xs={12} sm={6}>
-        <TextField 
-          fullWidth 
-          label="Halaman Akhir" 
-          error={halAkhirErr} 
+        <TextField
+          fullWidth
+          label="Halaman Akhir"
+          error={halAkhirErr}
           helperText={halAkhirErr}
           inputRef={halAkhirRef}
           defaultValue={halAkhirDefaultValue ? halAkhirDefaultValue : 0}

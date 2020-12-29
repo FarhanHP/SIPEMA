@@ -1,4 +1,4 @@
-export const isEmail = (email) => {
+export const isEmail = email => {
   // eslint-disable-next-line
   const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
 
@@ -6,20 +6,20 @@ export const isEmail = (email) => {
 };
 
 export const renderBody = body => {
-  const arrBody = body.split("\n")
+  const arrBody = body.split("\n");
 
-  const output = []
+  const output = [];
 
-  for(let i of arrBody){
+  for (let i of arrBody) {
     output.push(i);
 
-    output.push(<br/>);
+    output.push(<br />);
   }
 
   output.pop();
 
-  return output
-}
+  return output;
+};
 
 export const renderPrice = price => {
   const strPrice = String(price);
@@ -28,15 +28,15 @@ export const renderPrice = price => {
 
   let count = 0;
 
-  for(let i=strPrice.length; i>=0; i--){
+  for (let i = strPrice.length; i >= 0; i--) {
     output.splice(0, 0, strPrice.charAt(i));
 
-    if(count !== 0 && count%3 === 0 && i!==0){
-      output.splice(0, 0, ".")
+    if (count !== 0 && count % 3 === 0 && i !== 0) {
+      output.splice(0, 0, ".");
     }
 
-    count++
+    count++;
   }
 
   return output.join("");
-}
+};

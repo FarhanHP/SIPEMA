@@ -1,11 +1,27 @@
-import { Avatar, Box, Button, Divider, IconButton, makeStyles, Menu, MenuItem, Typography, Snackbar, Dialog } from "@material-ui/core";
+import {
+  Avatar,
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  makeStyles,
+  Menu,
+  MenuItem,
+  Typography,
+  Snackbar,
+  Dialog,
+} from "@material-ui/core";
 import { Fragment, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Main from "../../../component/main";
 import { getLoginToken } from "../../../local_storage";
-import { deleteAnnouncement, editAnnouncement, getAnnouncementDetail } from "../../../request/announcement";
+import {
+  deleteAnnouncement,
+  editAnnouncement,
+  getAnnouncementDetail,
+} from "../../../request/announcement";
 import moment from "moment";
 import { renderBody } from "../../../utils";
 import { MoreVert as MoreVertIcon } from "@material-ui/icons";
@@ -19,23 +35,23 @@ const useStyles = makeStyles(theme => {
       width: theme.spacing(5),
       marginRight: "10px",
       marginTop: "auto",
-      marginBottom: "auto"
+      marginBottom: "auto",
     },
 
     greyColor: {
-      color: "grey"
-    }
-  }
-})
+      color: "grey",
+    },
+  };
+});
 
-export default function AnnouncementDetail(){
+export default function AnnouncementDetail() {
   const classes = useStyles();
 
-  const {announcementId} = useParams();
+  const { announcementId } = useParams();
 
   const loginUser = useSelector(state => {
-    return state.loginUser
-  })
+    return state.loginUser;
+  });
 
   const [announcement, setAnnouncement] = useState(null);
 
@@ -53,15 +69,13 @@ export default function AnnouncementDetail(){
 
   const announcementNotFoundComponent = (
     <Box minHeight="70vh" display="flex" alignItems="center" justifyContent="center">
-      <Typography variant="h5">
-        Pengumuman tidak ditemukan.
-      </Typography>
+      <Typography variant="h5">Pengumuman tidak ditemukan.</Typography>
     </Box>
   );
 
   let announcementComponent = null;
 
-  if(announcement){
+  if (announcement) {
     const teacher = announcement.teacher;
 
     const pp = teacher.pp;
@@ -85,9 +99,7 @@ export default function AnnouncementDetail(){
             </Avatar>
 
             <Box my="auto">
-              <Typography variant="h6">
-                {fullname}
-              </Typography>
+              <Typography variant="h6">{fullname}</Typography>
 
               <Typography className={classes.greyColor}>
                 {moment.unix(created).format("llll")}
@@ -98,19 +110,26 @@ export default function AnnouncementDetail(){
           {isOwner ? (
             <Box display="flex" width="10%" flexDirection="row-reverse">
               <Box my="auto">
-                <IconButton size="small" onClick={event=>{
-                setAnchorEl(event.currentTarget)
-              }}>
-                <MoreVertIcon/>
-              </IconButton>
+                <IconButton
+                  size="small"
+                  onClick={event => {
+                    setAnchorEl(event.currentTarget);
+                  }}
+                >
+                  <MoreVertIcon />
+                </IconButton>
               </Box>
 
-              <Menu open={anchorEl} anchorEl={anchorEl} onClose={()=>{
-                setAnchorEl(null);
-              }}>
-                <MenuItem 
-                  component={Button} 
-                  onClick={()=>{
+              <Menu
+                open={anchorEl}
+                anchorEl={anchorEl}
+                onClose={() => {
+                  setAnchorEl(null);
+                }}
+              >
+                <MenuItem
+                  component={Button}
+                  onClick={() => {
                     setOpenDialog(true);
 
                     setAnchorEl(null);
@@ -119,25 +138,23 @@ export default function AnnouncementDetail(){
                   EDIT
                 </MenuItem>
 
-                <MenuItem 
-                  component={Button} 
-                  disabled={deleting} 
-                  onClick={()=>{
+                <MenuItem
+                  component={Button}
+                  disabled={deleting}
+                  onClick={() => {
                     setDeleting(true);
 
                     deleteAnnouncement(announcementId, getLoginToken()).then(res => {
-                      if(res.ok){
+                      if (res.ok) {
                         setAnnouncement(null);
 
                         setSbMsg("Berhasil menghapus pengumuman");
-                      }
-
-                      else{
-                        setSbMsg("Gagal menghapus pengumuman")
+                      } else {
+                        setSbMsg("Gagal menghapus pengumuman");
 
                         setDeleting(false);
                       }
-                    })
+                    });
                   }}
                 >
                   {deleting ? "MENGHAPUS..." : "HAPUS"}
@@ -148,7 +165,7 @@ export default function AnnouncementDetail(){
         </Box>
 
         <Box my="20px">
-          <Divider/>
+          <Divider />
         </Box>
 
         <Box display="flex" flexDirection="column" mb="50px">
@@ -158,72 +175,69 @@ export default function AnnouncementDetail(){
             </Typography>
           </Box>
 
-          <Typography align="justify">
-            {renderBody(body)}
-          </Typography>
+          <Typography align="justify">{renderBody(body)}</Typography>
         </Box>
 
-        <Dialog 
-          open={openDialog} 
-          onClose={()=>{
-            setOpenDialog(false)
+        <Dialog
+          open={openDialog}
+          onClose={() => {
+            setOpenDialog(false);
           }}
           fullWidth
         >
-          <AnnouncementDialog 
+          <AnnouncementDialog
             defaultTitle={announcement.title}
             defaultBody={announcement.body}
             headerTitle="Mengedit Pengumuman"
             btnName={{
               normal: "EDIT",
-              loading: "MENGEDIT..."
+              loading: "MENGEDIT...",
             }}
             handleSubmit={async (title, desc) => {
-              return await editAnnouncement(announcementId, title, desc, getLoginToken()).then(res => {
-                if(res.ok){
-                  setSbMsg("Berhasil mengedit pengumuman.");
+              return await editAnnouncement(announcementId, title, desc, getLoginToken()).then(
+                res => {
+                  if (res.ok) {
+                    setSbMsg("Berhasil mengedit pengumuman.");
 
-                  setOpenDialog(false);
+                    setOpenDialog(false);
 
-                  const newAnnouncement = {...announcement};
+                    const newAnnouncement = { ...announcement };
 
-                  newAnnouncement.title = title;
-                  newAnnouncement.body = desc;
+                    newAnnouncement.title = title;
+                    newAnnouncement.body = desc;
 
-                  setAnnouncement(newAnnouncement)
-                  
-                  return true;
-                }
-                else{
-                  setSbMsg("Gagal mengedit pengumuman.");
+                    setAnnouncement(newAnnouncement);
 
-                  return false;
-                }
-              })
-            }} 
+                    return true;
+                  } else {
+                    setSbMsg("Gagal mengedit pengumuman.");
+
+                    return false;
+                  }
+                },
+              );
+            }}
           />
         </Dialog>
       </Fragment>
     );
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     getAnnouncementDetail(announcementId, getLoginToken()).then(res => {
-      if(res.ok){
+      if (res.ok) {
         res.json().then(data => {
           setAnnouncement(data);
 
-          setTitle(data.title)
+          setTitle(data.title);
 
-          setLoading(false)
-        })
+          setLoading(false);
+        });
+      } else {
+        setLoading(false);
       }
-
-      else{
-        setLoading(false)
-      }
-    })
-  }, [announcementId])
+    });
+  }, [announcementId]);
 
   return (
     <Fragment>

@@ -1,11 +1,20 @@
-import { Box, Button, Dialog, IconButton, Menu, MenuItem, Paper, Typography } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  Dialog,
+  IconButton,
+  Menu,
+  MenuItem,
+  Paper,
+  Typography,
+} from "@material-ui/core";
 import moment from "moment";
 import { renderPrice } from "../utils";
-import { MoreVert as MoreVertIcon} from "@material-ui/icons";
+import { MoreVert as MoreVertIcon } from "@material-ui/icons";
 import { Fragment, useState } from "react";
 import PaymentDialog from "./payment_dialog";
 
-export default function PaymentCard(props){
+export default function PaymentCard(props) {
   const [tanggal, setTanggal] = useState(props.tanggal);
   const [amount, setAmount] = useState(props.amount);
   const onDelete = props.onDelete;
@@ -30,54 +39,56 @@ export default function PaymentCard(props){
 
         {onDelete && onEdit ? (
           <Box>
-            <IconButton 
-              onClick={(event)=>{
+            <IconButton
+              onClick={event => {
                 setAnchorEl(event.currentTarget);
               }}
               size="small"
             >
-              <MoreVertIcon/>
+              <MoreVertIcon />
             </IconButton>
 
             <Menu
               open={anchorEl}
               anchorEl={anchorEl}
-              onClose={()=>{
+              onClose={() => {
                 setAnchorEl(null);
               }}
             >
-              <MenuItem onClick={()=>{
-                setAnchorEl(null);
-                
-                setOpenDialog(true);
-              }}>
+              <MenuItem
+                onClick={() => {
+                  setAnchorEl(null);
+
+                  setOpenDialog(true);
+                }}
+              >
                 Edit
               </MenuItem>
 
-              <MenuItem 
-                component={Button} 
-                onClick={()=>{
+              <MenuItem
+                component={Button}
+                onClick={() => {
                   setDeleting(true);
 
                   onDelete().then(res => {
-                    if(!res){
-                      setDeleting(false)
+                    if (!res) {
+                      setDeleting(false);
                     }
-                  })
+                  });
                 }}
                 disabled={deleting}
               >
-                {deleting ? "MENGHAPUS..." : "HAPUS" }
+                {deleting ? "MENGHAPUS..." : "HAPUS"}
               </MenuItem>
             </Menu>
-          </Box> 
-        ): null}
+          </Box>
+        ) : null}
       </Box>
 
       {/*Mengedit pembayaran*/}
-      <Dialog 
+      <Dialog
         open={openDialog}
-        onClose={()=>{
+        onClose={() => {
           setOpenDialog(false);
         }}
         fullWidth
@@ -86,21 +97,19 @@ export default function PaymentCard(props){
           headerTitle="Edit Riwayat Pembayaran Murid"
           btnTitle={{
             normal: "EDIT",
-            loading: "MENGEDIT..."
+            loading: "MENGEDIT...",
           }}
-          onSubmit={async (amount, date)=>{
+          onSubmit={async (amount, date) => {
             return await onEdit(amount, date).then(res => {
-              if(res){
+              if (res) {
                 setAmount(amount);
                 setTanggal(date);
                 setOpenDialog(false);
                 return true;
-              }
-
-              else{
+              } else {
                 return false;
               }
-            })
+            });
           }}
           defaultAmount={amount}
           defaultDate={tanggal}

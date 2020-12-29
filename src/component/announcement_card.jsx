@@ -1,18 +1,28 @@
 import moment from "moment";
-import {Box, Button, ButtonBase, IconButton, makeStyles, Menu, MenuItem, Paper, Typography} from "@material-ui/core";
-import TouchRipple from '@material-ui/core/ButtonBase/TouchRipple'
-import {MoreVert as MoreVertIcon} from "@material-ui/icons"
+import {
+  Box,
+  Button,
+  ButtonBase,
+  IconButton,
+  makeStyles,
+  Menu,
+  MenuItem,
+  Paper,
+  Typography,
+} from "@material-ui/core";
+import TouchRipple from "@material-ui/core/ButtonBase/TouchRipple";
+import { MoreVert as MoreVertIcon } from "@material-ui/icons";
 import { useState } from "react";
 
-const useStyles = makeStyles(()=>{
+const useStyles = makeStyles(() => {
   return {
     created: {
-      color: "grey"
-    }
-  }
-})
+      color: "grey",
+    },
+  };
+});
 
-export default function AnnouncementCard(props){
+export default function AnnouncementCard(props) {
   const classes = useStyles();
 
   const announcement = props.announcement;
@@ -29,25 +39,25 @@ export default function AnnouncementCard(props){
 
   const [deleting, setDeleting] = useState(false);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget)
-  }
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget);
+  };
 
-  const handleClose = ()=>{
+  const handleClose = () => {
     setAnchorEl(null);
-  }
+  };
 
   const onBodyClick = props.onBodyClick;
 
   return (
-    <Box 
+    <Box
       mx="auto"
       my="10px"
       width={{
         xs: "100%",
-        sm: "500px"
+        sm: "500px",
       }}
-      component={Paper} 
+      component={Paper}
       height="140px"
       p="10px"
       elevation={3}
@@ -67,22 +77,22 @@ export default function AnnouncementCard(props){
               <MoreVertIcon />
             </IconButton>
 
-            <Menu 
-              open={anchorEl} 
-              anchorEl={anchorEl}
-              onClose={handleClose}
-            >
-              <MenuItem component={Button} disabled={deleting} onClick={()=>{
-                setDeleting(true);
+            <Menu open={anchorEl} anchorEl={anchorEl} onClose={handleClose}>
+              <MenuItem
+                component={Button}
+                disabled={deleting}
+                onClick={() => {
+                  setDeleting(true);
 
-                const res = onDelete();
+                  const res = onDelete();
 
-                res.then(value => {
-                  if(!value){
-                    setDeleting(false);
-                  }
-                })
-              }}>
+                  res.then(value => {
+                    if (!value) {
+                      setDeleting(false);
+                    }
+                  });
+                }}
+              >
                 {deleting ? "MENGHAPUS..." : "HAPUS"}
               </MenuItem>
             </Menu>

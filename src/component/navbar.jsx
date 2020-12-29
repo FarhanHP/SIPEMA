@@ -36,7 +36,7 @@ export default function Navbar(props) {
 
   const [sbMsg, setSbMsg] = useState(null);
 
-  const handleClick = (event) => {
+  const handleClick = event => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -61,9 +61,7 @@ export default function Navbar(props) {
           <Box width={"50%"} display="flex" flexDirection="row-reverse">
             <div>
               <IconButton onClick={handleClick} size={"small"}>
-                <Avatar src={loginUser.pp}>
-                  {loginUser.fullname.charAt(0)}
-                </Avatar>
+                <Avatar src={loginUser.pp}>{loginUser.fullname.charAt(0)}</Avatar>
               </IconButton>
 
               <Menu open={anchorEl} onClose={handleClose} anchorEl={anchorEl}>
@@ -76,7 +74,7 @@ export default function Navbar(props) {
                   onClick={() => {
                     setLoggingOut(true);
 
-                    logout(getLoginToken()).then((res) => {
+                    logout(getLoginToken()).then(res => {
                       if (res.ok) {
                         deleteLoginToken();
 

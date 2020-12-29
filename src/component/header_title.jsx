@@ -22,12 +22,7 @@ export default function HeaderTitle(props) {
 
       <Hidden only="xs">
         <Grid item sm={4}>
-          <Box
-            display="flex"
-            flexDirection="row-reverse"
-            width="100%"
-            height="100%"
-          >
+          <Box display="flex" flexDirection="row-reverse" width="100%" height="100%">
             <Box my="auto">
               <Typography>{moment().format("ll")}</Typography>
             </Box>

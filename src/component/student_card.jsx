@@ -11,9 +11,9 @@ import {
   Button,
 } from "@material-ui/core";
 import { MoreVert as MoreVertIcon } from "@material-ui/icons";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
-const useStyles = makeStyles((theme) => {
+const useStyles = makeStyles(theme => {
   return {
     avatar: {
       height: theme.spacing(8),
@@ -43,7 +43,7 @@ export default function StudentCard(props) {
 
     const res = props.onKick();
 
-    res.then((value) => {
+    res.then(value => {
       if (!value) {
         setKicking(false);
       }
@@ -79,7 +79,7 @@ export default function StudentCard(props) {
       <Box>
         <IconButton
           size="small"
-          onClick={(event) => {
+          onClick={event => {
             setAnchorEl(event.currentTarget);
           }}
         >
@@ -93,7 +93,9 @@ export default function StudentCard(props) {
             setAnchorEl(null);
           }}
         >
-          <MenuItem component={Link} to={`/s/${_id}`}>Lihat Detil</MenuItem>
+          <MenuItem component={Link} to={`/s/${_id}`}>
+            Lihat Detil
+          </MenuItem>
 
           <MenuItem component={Button} disabled={kicking} onClick={onKick}>
             {kicking ? "MENENDANG..." : "TENDANG"}

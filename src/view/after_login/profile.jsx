@@ -24,7 +24,7 @@ import { getLoginToken } from "../../local_storage";
 import { login } from "../../actions";
 import { Skeleton } from "@material-ui/lab";
 
-const useStyles = makeStyles((theme) => {
+const useStyles = makeStyles(theme => {
   return {
     pp: {
       height: theme.spacing(15),
@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => {
 export default function Profile() {
   const classes = useStyles();
 
-  const loginUser = useSelector((state) => {
+  const loginUser = useSelector(state => {
     return state.loginUser;
   });
 
@@ -75,7 +75,7 @@ export default function Profile() {
 
   const [location, setLocation] = useState(window.location.pathname);
 
-  const handleChangePic = (event) => {
+  const handleChangePic = event => {
     const file = event.target.files[0];
 
     const mbFileSize = (file.size / 1024 / 1024).toFixed(4);
@@ -85,9 +85,9 @@ export default function Profile() {
     } else {
       setPpLoading(true);
 
-      changePp(getLoginToken(), file).then((res) => {
+      changePp(getLoginToken(), file).then(res => {
         if (res.ok) {
-          res.json().then((data) => {
+          res.json().then(data => {
             loginUser.pp = data.pp;
 
             dispatch(login(loginUser));
@@ -126,11 +126,7 @@ export default function Profile() {
               <Box display="flex" width="100%" my="20px">
                 <Box mx="auto">
                   {ppLoading ? (
-                    <Skeleton
-                      height="120px"
-                      width="120px"
-                      variant="circle"
-                    ></Skeleton>
+                    <Skeleton height="120px" width="120px" variant="circle"></Skeleton>
                   ) : (
                     <Avatar src={pp} className={classes.pp}>
                       {fullname.charAt(0)}
@@ -150,11 +146,7 @@ export default function Profile() {
                   />
 
                   <label htmlFor="contained-button-file">
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      component="span"
-                    >
+                    <Button variant="contained" color="primary" component="span">
                       GANTI FOTO PROFIL
                     </Button>
                   </label>
@@ -189,12 +181,7 @@ export default function Profile() {
                     setLocation(newValue);
                   }}
                 >
-                  <Tab
-                    label="Umum"
-                    component={Link}
-                    to="/profile"
-                    value="/profile"
-                  />
+                  <Tab label="Umum" component={Link} to="/profile" value="/profile" />
 
                   <Tab
                     label="Ganti Password"

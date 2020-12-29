@@ -82,7 +82,13 @@ const Sidebar = props => {
       <Toolbar />
       <List>
         {sidebarItems.map((item, index) => (
-          <ListItem button to={item.to} key={index} component={NavLink} className={classes.listItem}>
+          <ListItem
+            button
+            to={item.to}
+            key={index}
+            component={NavLink}
+            className={classes.listItem}
+          >
             <ListItemText primary={item.text} />
           </ListItem>
         ))}

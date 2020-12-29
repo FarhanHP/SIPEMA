@@ -42,7 +42,7 @@ export default function ChangePassword() {
     } else {
       setLoading(true);
 
-      changePass(getLoginToken(), pass, npass).then((res) => {
+      changePass(getLoginToken(), pass, npass).then(res => {
         if (res.ok) {
           setSbMsg("Berhasil mengganti password.");
         } else if (res.status === 401) {
@@ -67,7 +67,7 @@ export default function ChangePassword() {
           error={passErr}
           helperText={passErr}
           inputRef={passRef}
-          onKeyUp={(event) => {
+          onKeyUp={event => {
             if (event.keyCode === 13) {
               event.preventDefault();
 
@@ -86,7 +86,7 @@ export default function ChangePassword() {
           inputRef={npassRef}
           error={npassErr}
           helperText={npassErr}
-          onKeyUp={(event) => {
+          onKeyUp={event => {
             if (event.keyCode === 13) {
               event.preventDefault();
 
@@ -105,7 +105,7 @@ export default function ChangePassword() {
           inputRef={rnpassRef}
           error={rnpassErr}
           helperText={rnpassErr}
-          onKeyUp={(event) => {
+          onKeyUp={event => {
             if (event.keyCode === 13) {
               event.preventDefault();
 
@@ -116,12 +116,7 @@ export default function ChangePassword() {
       </Box>
 
       <Box display="flex" mb="30px" flexDirection="row-reverse">
-        <Button
-          color="primary"
-          variant="contained"
-          disabled={loading}
-          onClick={handleSubmit}
-        >
+        <Button color="primary" variant="contained" disabled={loading} onClick={handleSubmit}>
           {loading ? "MENGUBAH..." : "UBAH"}
         </Button>
       </Box>

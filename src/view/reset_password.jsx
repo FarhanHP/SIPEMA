@@ -32,7 +32,7 @@ export default function ResetPassword() {
   useEffect(() => {
     setLoading(true);
 
-    checkResetPasswordToken(token).then((res) => {
+    checkResetPasswordToken(token).then(res => {
       if (res.status === 500) {
         setErrMsg("ERROR 500: Terjadi masalah, mohon coba lagi nanti.");
       } else if (res.status === 401) {
@@ -63,7 +63,7 @@ export default function ResetPassword() {
     } else {
       setSubmitLoading(true);
 
-      resetPassword(token, pass).then((res) => {
+      resetPassword(token, pass).then(res => {
         if (res.status === 500) {
           setErrAlert("Terjadi masalah, mohon coba lagin nanti.");
         } else if (res.status === 404) {
@@ -73,9 +73,7 @@ export default function ResetPassword() {
         } else {
           setSuccAlert(
             <React.Fragment>
-              <Typography gutterBottom>
-                Silakan login dengan password baru anda.
-              </Typography>
+              <Typography gutterBottom>Silakan login dengan password baru anda.</Typography>
 
               <Box display="flex">
                 <Box margin="auto">
@@ -84,7 +82,7 @@ export default function ResetPassword() {
                   </Button>
                 </Box>
               </Box>
-            </React.Fragment>
+            </React.Fragment>,
           );
         }
 
@@ -124,18 +122,10 @@ export default function ResetPassword() {
 
             {succAlert ? (
               <Box my="20px">
-                <FAlert
-                  severity="success"
-                  title="Berhasil Mengganti Password"
-                  body={succAlert}
-                />
+                <FAlert severity="success" title="Berhasil Mengganti Password" body={succAlert} />
               </Box>
             ) : errAlert ? (
-              <FAlert
-                severity="error"
-                title="Gagal Mengganti Password"
-                body={errAlert}
-              />
+              <FAlert severity="error" title="Gagal Mengganti Password" body={errAlert} />
             ) : null}
 
             <Box my="20px">
@@ -147,7 +137,7 @@ export default function ResetPassword() {
                 error={passErr}
                 helperText={passErr}
                 inputRef={passRef}
-                onKeyUp={(event) => {
+                onKeyUp={event => {
                   if (event.keyCode === 13) {
                     event.preventDefault();
 
@@ -166,7 +156,7 @@ export default function ResetPassword() {
                 error={rpassErr}
                 helperText={rpassErr}
                 inputRef={rpassRef}
-                onKeyUp={(event) => {
+                onKeyUp={event => {
                   if (event.keyCode === 13) {
                     event.preventDefault();
 

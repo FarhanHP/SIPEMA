@@ -13,7 +13,7 @@ export const request = async (url, method, headers, body, signal) => {
     referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
     body: body, // body data type must match "Content-Type" header
     signal: signal,
-  }).catch((e) => {
+  }).catch(e => {
     console.warn(`Fetch 1 error: ${e.message}`);
   });
 

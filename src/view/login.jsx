@@ -33,7 +33,7 @@ export default function Login() {
     } else {
       setLoading(true);
 
-      login(email, password).then((res) => {
+      login(email, password).then(res => {
         if (res.status === 500) {
           setErrMsg("Terjadi masalah, mohon coba lagi nanti.");
           setLoading(false);
@@ -41,7 +41,7 @@ export default function Login() {
           setErrMsg("Email atau password salah.");
           setLoading(false);
         } else {
-          res.json().then((data) => {
+          res.json().then(data => {
             setLoginToken(data.token);
             window.location.href = "/";
           });
@@ -68,11 +68,7 @@ export default function Login() {
 
           {errorMsg ? (
             <Box my="20px">
-              <FAlert
-                severity={"error"}
-                title={"Login Error"}
-                body={errorMsg}
-              />
+              <FAlert severity={"error"} title={"Login Error"} body={errorMsg} />
             </Box>
           ) : null}
 
@@ -84,7 +80,7 @@ export default function Login() {
               inputRef={emailRef}
               error={emailErr}
               helperText={emailErr}
-              onKeyUp={(event) => {
+              onKeyUp={event => {
                 if (event.keyCode === 13) {
                   event.preventDefault();
 
@@ -103,7 +99,7 @@ export default function Login() {
               inputRef={passwordRef}
               error={passwordErr}
               helperText={passwordErr}
-              onKeyUp={(event) => {
+              onKeyUp={event => {
                 if (event.keyCode === 13) {
                   event.preventDefault();
 

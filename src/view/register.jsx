@@ -56,7 +56,7 @@ export default function Register() {
     } else {
       setLoading(true);
 
-      registerRequest(email, fullname, password).then((res) => {
+      registerRequest(email, fullname, password).then(res => {
         if (res.status === 500) {
           setErrorMsg("Terjadi masalah, mohon coba lagi nanti.");
         } else if (res.status === 409) {
@@ -88,19 +88,11 @@ export default function Register() {
 
           {successMsg ? (
             <Box my="20px">
-              <FAlert
-                severity="success"
-                title="Berhasil Mendaftar"
-                body={successMsg}
-              />
+              <FAlert severity="success" title="Berhasil Mendaftar" body={successMsg} />
             </Box>
           ) : errorMsg ? (
             <Box my="20px">
-              <FAlert
-                severity="error"
-                title="Gagal Mendaftar"
-                body={errorMsg}
-              />
+              <FAlert severity="error" title="Gagal Mendaftar" body={errorMsg} />
             </Box>
           ) : null}
 
@@ -112,7 +104,7 @@ export default function Register() {
               inputRef={emailRef}
               error={emailErr}
               helperText={emailErr}
-              onKeyUp={(event) => {
+              onKeyUp={event => {
                 if (event.keyCode === 13) {
                   event.preventDefault();
 
@@ -130,7 +122,7 @@ export default function Register() {
               inputRef={fullnameRef}
               error={fullnameErr}
               helperText={fullnameErr}
-              onKeyUp={(event) => {
+              onKeyUp={event => {
                 if (event.keyCode === 13) {
                   event.preventDefault();
 
@@ -149,7 +141,7 @@ export default function Register() {
               inputRef={passwordRef}
               error={passwordErr}
               helperText={passwordErr}
-              onKeyUp={(event) => {
+              onKeyUp={event => {
                 if (event.keyCode === 13) {
                   event.preventDefault();
 
@@ -168,7 +160,7 @@ export default function Register() {
               error={rpasswordErr}
               type="password"
               helperText={rpasswordErr}
-              onKeyUp={(event) => {
+              onKeyUp={event => {
                 if (event.keyCode === 13) {
                   event.preventDefault();
 

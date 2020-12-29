@@ -10,81 +10,77 @@ import { getStudent } from "../../../../request/student";
 import Payment from "./payment";
 import Progress from "./progress";
 
-export default function StudentDetail(){
+export default function StudentDetail() {
   const loginUser = useSelector(state => {
     return state.loginUser;
   });
 
   const limit = 5;
 
-  const {studentId} = useParams();
+  const { studentId } = useParams();
 
   const [student, setStudent] = useState(null);
 
   const [loading, setLoading] = useState(true);
 
-  useEffect(()=>{
+  useEffect(() => {
     getStudent(studentId, getLoginToken()).then(res => {
-      if(res.ok){
+      if (res.ok) {
         res.json().then(data => {
           setStudent(data);
           setLoading(false);
-        })
-      }
-
-      else{
+        });
+      } else {
         setLoading(false);
       }
-    })
-  }, [studentId])
-  
+    });
+  }, [studentId]);
+
   return (
     <Main loginUser={loginUser}>
       {loading ? (
         <StudentDetailLoading
-          tabs={[{
-            label: "Bacaan",
-            url: `/s/${studentId}`
-          }, {
-            label: "Pembayaran",
-            url: `/s/${studentId}/pembayaran`
-          }]}
+          tabs={[
+            {
+              label: "Bacaan",
+              url: `/s/${studentId}`,
+            },
+            {
+              label: "Pembayaran",
+              url: `/s/${studentId}/pembayaran`,
+            },
+          ]}
           number={limit}
         />
-      ):student ? (
-        <StudentDetailLayout 
+      ) : student ? (
+        <StudentDetailLayout
           student={student}
-          tabs={[{
-            label: "Bacaan",
-            url: `/s/${studentId}`
-          }, {
-            label: "Pembayaran",
-            url: `/s/${studentId}/pembayaran`
-          }]}
+          tabs={[
+            {
+              label: "Bacaan",
+              url: `/s/${studentId}`,
+            },
+            {
+              label: "Pembayaran",
+              url: `/s/${studentId}/pembayaran`,
+            },
+          ]}
         >
           <Switch>
             <Route path="/s/:studentId/pembayaran">
-              <Payment/>
+              <Payment />
             </Route>
 
             <Route path="/s/:studentId">
-              <Progress/>
+              <Progress />
             </Route>
           </Switch>
         </StudentDetailLayout>
-      ):(
-        <Box 
-          height="70vh" 
-          width="100%" 
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Typography variant="h5">
-            Murid tidak ada.
-          </Typography>
+      ) : (
+        <Box height="70vh" width="100%" display="flex" justifyContent="center" alignItems="center">
+          <Typography variant="h5">Murid tidak ada.</Typography>
         </Box>
       )}
     </Main>
-  )
+  );
 }

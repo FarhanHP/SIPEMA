@@ -12,7 +12,7 @@ import UstudentCard from "../../../component/ustudent_card";
 import StudentCard from "../../../component/student_card";
 
 export default function StudentManagement() {
-  const loginUser = useSelector((state) => {
+  const loginUser = useSelector(state => {
     return state.loginUser;
   });
   const [loadingStudents, setLoadingStudents] = useState(true);
@@ -34,9 +34,9 @@ export default function StudentManagement() {
   useEffect(() => {
     const token = getLoginToken();
 
-    getStudents(token, 0, limit, true).then((res) => {
+    getStudents(token, 0, limit, true).then(res => {
       if (res.ok) {
-        res.json().then((data) => {
+        res.json().then(data => {
           const newStudents = data.students;
 
           const count = data.count;
@@ -52,9 +52,9 @@ export default function StudentManagement() {
       }
     });
 
-    getStudents(token, 0, limit, false).then((res) => {
+    getStudents(token, 0, limit, false).then(res => {
       if (res.ok) {
-        res.json().then((data) => {
+        res.json().then(data => {
           const newUstudents = data.students;
 
           const count = data.count;
@@ -84,7 +84,7 @@ export default function StudentManagement() {
         mx="auto"
       >
         <Skeleton variant="rect" height="60px" />
-      </Box>
+      </Box>,
     );
   }
 
@@ -95,10 +95,7 @@ export default function StudentManagement() {
       </Helmet>
 
       <Main loginUser={loginUser}>
-        <HeaderTitle
-          icon={<PeopleIcon fontSize="large" />}
-          title="Manajemen Murid"
-        />
+        <HeaderTitle icon={<PeopleIcon fontSize="large" />} title="Manajemen Murid" />
 
         <Box mt="50px">
           <Box mb="20px">
@@ -113,57 +110,51 @@ export default function StudentManagement() {
                     key={_id}
                     student={value}
                     onKick={async () => {
-                      return await setStudent(getLoginToken(), _id, false).then(
-                        (res) => {
-                          if (res.ok) {
-                            //update ustudents
-                            const limit = ustudents.length + 1;
+                      return await setStudent(getLoginToken(), _id, false).then(res => {
+                        if (res.ok) {
+                          //update ustudents
+                          const limit = ustudents.length + 1;
 
-                            getStudents(getLoginToken(), 0, limit, false).then(
-                              (res) => {
-                                if (res.ok) {
-                                  res.json().then((data) => {
-                                    const count = data.count;
+                          getStudents(getLoginToken(), 0, limit, false).then(res => {
+                            if (res.ok) {
+                              res.json().then(data => {
+                                const count = data.count;
 
-                                    const newUstudents = data.students;
+                                const newUstudents = data.students;
 
-                                    setUstudents(newUstudents);
+                                setUstudents(newUstudents);
 
-                                    setUstdLoadable(
-                                      newUstudents.length < count
-                                    );
+                                setUstdLoadable(newUstudents.length < count);
 
-                                    setLoadingUstudents(false);
-                                  });
-                                } else {
-                                  setLoadingUstudents(false);
-                                }
-                              }
-                            );
+                                setLoadingUstudents(false);
+                              });
+                            } else {
+                              setLoadingUstudents(false);
+                            }
+                          });
 
-                            setUstudents([]);
+                          setUstudents([]);
 
-                            setLoadingUstudents(true);
-                            //update ustudents end
+                          setLoadingUstudents(true);
+                          //update ustudents end
 
-                            //update students
-                            const newStudents = students.slice();
+                          //update students
+                          const newStudents = students.slice();
 
-                            newStudents.splice(index, 1);
+                          newStudents.splice(index, 1);
 
-                            setStudents(newStudents);
+                          setStudents(newStudents);
 
-                            setSbMsg(`${fullname} berhasil ditendang.`);
-                            //update students end
+                          setSbMsg(`${fullname} berhasil ditendang.`);
+                          //update students end
 
-                            return true;
-                          } else {
-                            setSbMsg("Gagal menendang murid.");
+                          return true;
+                        } else {
+                          setSbMsg("Gagal menendang murid.");
 
-                            return false;
-                          }
+                          return false;
                         }
-                      );
+                      });
                     }}
                   />
                 </Box>
@@ -190,14 +181,9 @@ export default function StudentManagement() {
 
                   setLoadingStudents(true);
 
-                  getStudents(
-                    getLoginToken(),
-                    priorStudents.length,
-                    limit,
-                    true
-                  ).then((res) => {
+                  getStudents(getLoginToken(), priorStudents.length, limit, true).then(res => {
                     if (res.ok) {
-                      res.json().then((data) => {
+                      res.json().then(data => {
                         const newStudents = priorStudents.concat(data.students);
 
                         setStudents(newStudents);
@@ -237,49 +223,45 @@ export default function StudentManagement() {
                     key={_id}
                     student={value}
                     onAcc={async () => {
-                      return await setStudent(getLoginToken(), _id, true).then(
-                        (res) => {
-                          if (res.ok) {
-                            //update students
-                            const limit = students.length + 1;
-                            setStudents([]);
-                            setLoadingStudents(true);
-                            getStudents(getLoginToken(), 0, limit, true).then(
-                              (res) => {
-                                if (res.ok) {
-                                  res.json().then((data) => {
-                                    const newStudents = data.students;
+                      return await setStudent(getLoginToken(), _id, true).then(res => {
+                        if (res.ok) {
+                          //update students
+                          const limit = students.length + 1;
+                          setStudents([]);
+                          setLoadingStudents(true);
+                          getStudents(getLoginToken(), 0, limit, true).then(res => {
+                            if (res.ok) {
+                              res.json().then(data => {
+                                const newStudents = data.students;
 
-                                    const count = data.count;
+                                const count = data.count;
 
-                                    setStudents(newStudents);
+                                setStudents(newStudents);
 
-                                    setStdLoadable(newStudents.length < count);
+                                setStdLoadable(newStudents.length < count);
 
-                                    setLoadingStudents(false);
-                                  });
-                                } else {
-                                  setLoadingStudents(false);
-                                }
-                              }
-                            );
-                            //update students end
+                                setLoadingStudents(false);
+                              });
+                            } else {
+                              setLoadingStudents(false);
+                            }
+                          });
+                          //update students end
 
-                            //update ustudents
-                            const newUstudents = ustudents.slice();
-                            newUstudents.splice(index, 1);
-                            setUstudents(newUstudents);
-                            //update ustudents end
+                          //update ustudents
+                          const newUstudents = ustudents.slice();
+                          newUstudents.splice(index, 1);
+                          setUstudents(newUstudents);
+                          //update ustudents end
 
-                            setSbMsg(`${fullname} diterima menjadi murid.`);
+                          setSbMsg(`${fullname} diterima menjadi murid.`);
 
-                            return true;
-                          } else {
-                            setSbMsg(`Gagal menerima murid`);
-                            return false;
-                          }
+                          return true;
+                        } else {
+                          setSbMsg(`Gagal menerima murid`);
+                          return false;
                         }
-                      );
+                      });
                     }}
                   />
                 </Box>
@@ -298,12 +280,7 @@ export default function StudentManagement() {
           </Box>
 
           {ustdLoadable && !loadingUstudents ? (
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignContent="center"
-              pb="50px"
-            >
+            <Box display="flex" justifyContent="center" alignContent="center" pb="50px">
               <Button
                 color="primary"
                 onClick={() => {
@@ -311,17 +288,10 @@ export default function StudentManagement() {
 
                   setLoadingUstudents(true);
 
-                  getStudents(
-                    getLoginToken(),
-                    priorUstudents.length,
-                    limit,
-                    false
-                  ).then((res) => {
+                  getStudents(getLoginToken(), priorUstudents.length, limit, false).then(res => {
                     if (res.ok) {
-                      res.json().then((data) => {
-                        const newUstudents = priorUstudents.concat(
-                          data.students
-                        );
+                      res.json().then(data => {
+                        const newUstudents = priorUstudents.concat(data.students);
 
                         setUstudents(newUstudents);
 

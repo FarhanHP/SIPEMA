@@ -6,7 +6,7 @@ import { getLoginToken } from "../../local_storage";
 import { login } from "../../actions";
 
 export default function MainProfile() {
-  const loginUser = useSelector((state) => {
+  const loginUser = useSelector(state => {
     return state.loginUser;
   });
 
@@ -35,7 +35,7 @@ export default function MainProfile() {
       } else {
         setLoading(true);
 
-        setProfile(getLoginToken(), newFullname).then((res) => {
+        setProfile(getLoginToken(), newFullname).then(res => {
           if (res.ok) {
             loginUser.fullname = newFullname;
 
@@ -63,7 +63,7 @@ export default function MainProfile() {
           error={fullnameErr}
           helperText={fullnameErr}
           inputRef={fullnameRef}
-          onKeyUp={(event) => {
+          onKeyUp={event => {
             if (event.keyCode === 13) {
               event.preventDefault();
 
@@ -78,12 +78,7 @@ export default function MainProfile() {
       </Box>
 
       <Box display="flex" mb="30px" flexDirection="row-reverse">
-        <Button
-          color="primary"
-          variant="contained"
-          disabled={loading}
-          onClick={handleSubmit}
-        >
+        <Button color="primary" variant="contained" disabled={loading} onClick={handleSubmit}>
           {loading ? "MENGUBAH..." : "UBAH"}
         </Button>
       </Box>

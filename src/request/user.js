@@ -1,7 +1,7 @@
 import { baseUrl } from "../setting";
 import { request, requestJson } from "./";
 
-export const getProfile = (token) => {
+export const getProfile = token => {
   return request(`${baseUrl}b/user/profile`, "GET", {
     token,
   });
@@ -17,7 +17,7 @@ export const login = (email, password) => {
     {
       email,
       password,
-    }
+    },
   );
 };
 
@@ -32,15 +32,15 @@ export const registerRequest = (email, fullname, password) => {
       email,
       fullname,
       password,
-    }
+    },
   );
 };
 
-export const register = (token) => {
+export const register = token => {
   return request(`${baseUrl}b/user/register/token/${token}`, "PUT");
 };
 
-export const resetPasswordRequest = (email) => {
+export const resetPasswordRequest = email => {
   return requestJson(
     `${baseUrl}b/user/password/reset`,
     "POST",
@@ -49,7 +49,7 @@ export const resetPasswordRequest = (email) => {
     },
     {
       email,
-    }
+    },
   );
 };
 
@@ -62,15 +62,15 @@ export const resetPassword = (token, password) => {
     },
     {
       password,
-    }
+    },
   );
 };
 
-export const checkResetPasswordToken = (token) => {
+export const checkResetPasswordToken = token => {
   return request(`${baseUrl}b/user/password/reset/check/token/${token}`, "GET");
 };
 
-export const logout = (token) => {
+export const logout = token => {
   return request(`${baseUrl}b/user/logout`, "DELETE", {
     token,
   });
@@ -84,7 +84,7 @@ export const setProfile = (token, fullname) => {
       "Content-Type": "application/json",
       token: token,
     },
-    { fullname }
+    { fullname },
   );
 };
 
@@ -99,7 +99,7 @@ export const changePass = (token, oldPass, newPass) => {
     {
       old_password: oldPass,
       new_password: newPass,
-    }
+    },
   );
 };
 
@@ -113,6 +113,6 @@ export const changePp = (token, photo) => {
     {
       token,
     },
-    form
+    form,
   );
 };

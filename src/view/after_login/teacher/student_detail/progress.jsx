@@ -1,7 +1,12 @@
 import { Box, Button, Dialog, Fab, makeStyles, Snackbar, Typography } from "@material-ui/core";
 import { Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { createProgress, deleteProgress, editProgress, getProgressByStudentId } from "../../../../request/progress";
+import {
+  createProgress,
+  deleteProgress,
+  editProgress,
+  getProgressByStudentId,
+} from "../../../../request/progress";
 import { Add as AddIcon } from "@material-ui/icons";
 import { getLoginToken } from "../../../../local_storage";
 import { Skeleton } from "@material-ui/lab";
@@ -13,23 +18,23 @@ const useStyles = makeStyles(theme => {
     fab: {
       position: "fixed",
 
-      [theme.breakpoints.up("xs")]:{
+      [theme.breakpoints.up("xs")]: {
         right: theme.spacing(1),
-        bottom: theme.spacing(1)
+        bottom: theme.spacing(1),
       },
 
-      [theme.breakpoints.up("xs")]:{
+      [theme.breakpoints.up("xs")]: {
         right: theme.spacing(2),
-        bottom: theme.spacing(2)
-      }
+        bottom: theme.spacing(2),
+      },
     },
-  }
-})
+  };
+});
 
-export default function Progress(){
+export default function Progress() {
   const classes = useStyles();
 
-  const {studentId} = useParams();
+  const { studentId } = useParams();
 
   const [loading, setLoading] = useState(true);
   const [progresses, setProgresses] = useState([]);
@@ -37,34 +42,33 @@ export default function Progress(){
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [sbMsg, setSbMsg] = useState(null);
 
-  const loadingEl = []
+  const loadingEl = [];
   const limit = 5;
-  
-  for(let i=0; i<limit; i++){
+
+  for (let i = 0; i < limit; i++) {
     loadingEl.push(
       <Box mb="20px">
-        <Skeleton variant="rect" height="80px" width="100%"/>
-      </Box>
-    )
+        <Skeleton variant="rect" height="80px" width="100%" />
+      </Box>,
+    );
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     getProgressByStudentId(getLoginToken(), studentId, 0, limit).then(res => {
-      if(res.ok){
+      if (res.ok) {
         res.json().then(data => {
           const newProgresses = data.progresses;
-          const count = data.count
+          const count = data.count;
 
           setLoadable(newProgresses.length < count);
           setProgresses(newProgresses);
           setLoading(false);
-        })
-      }
-      else{
+        });
+      } else {
         setLoading(false);
       }
-    })
-  }, [studentId])
+    });
+  }, [studentId]);
 
   return (
     <Fragment>
@@ -83,8 +87,8 @@ export default function Progress(){
 
           return (
             <Box mb="10px">
-              <ProgressAccordion 
-                key={_id} 
+              <ProgressAccordion
+                key={_id}
                 halAwal={halAwal}
                 halAkhir={halAkhir}
                 suratAwal={suratAwal}
@@ -94,38 +98,44 @@ export default function Progress(){
                 comment={comment}
                 tanggal={tanggal}
                 tipe={type}
-                onDelete={async ()=>{
+                onDelete={async () => {
                   return deleteProgress(getLoginToken(), _id).then(res => {
-                    if(res.ok){
+                    if (res.ok) {
                       const limit = progresses.length;
-                      setSbMsg("Berhasil menghapus")
+                      setSbMsg("Berhasil menghapus");
                       setLoading(true);
                       setProgresses([]);
                       getProgressByStudentId(getLoginToken(), studentId, 0, limit).then(res => {
-                        if(res.ok){
+                        if (res.ok) {
                           res.json().then(data => {
                             const newProgresses = data.progresses;
                             const count = data.count;
                             setLoadable(newProgresses.length < count);
                             setProgresses(newProgresses);
                             setLoading(false);
-                          })
-                        }
-
-                        else{
+                          });
+                        } else {
                           setLoading(false);
                         }
-                      })
-                      return true
-                    }
-
-                    else{
-                      setSbMsg("Gagal menghapus")
+                      });
+                      return true;
+                    } else {
+                      setSbMsg("Gagal menghapus");
                       return false;
                     }
-                  })
+                  });
                 }}
-                onEdit={async (type, halAwal, halAkhir, suratAwal, suratAkhir, ayatAwal, ayatAkhir, comment, tanggal) => {
+                onEdit={async (
+                  type,
+                  halAwal,
+                  halAkhir,
+                  suratAwal,
+                  suratAkhir,
+                  ayatAwal,
+                  ayatAkhir,
+                  comment,
+                  tanggal,
+                ) => {
                   return await editProgress(getLoginToken(), _id, {
                     type: type,
                     hal_awal: halAwal,
@@ -135,56 +145,51 @@ export default function Progress(){
                     ayat_awal: ayatAwal,
                     ayat_akhir: ayatAkhir,
                     comment: comment,
-                    tanggal: tanggal
+                    tanggal: tanggal,
                   }).then(res => {
-                    if(res.ok){
-                      setSbMsg("Berhasil mengedit riwayat bacaan")
+                    if (res.ok) {
+                      setSbMsg("Berhasil mengedit riwayat bacaan");
                       return true;
-                    }
-
-                    else{
-                      setSbMsg("Gagal mengedit riwayat bacaan")
+                    } else {
+                      setSbMsg("Gagal mengedit riwayat bacaan");
                       return false;
                     }
-                  })
+                  });
                 }}
               />
             </Box>
           );
         })}
 
-        {loading ? loadingEl : loadable ? (
-          <Box 
-            width="100%" 
-            py="20px" 
-            display="flex" 
-            alignContent="center" 
-            justifyContent="center">
-              <Button
-                color="primary"
-                onClick={()=> {
-                  setLoading(true);
+        {loading ? (
+          loadingEl
+        ) : loadable ? (
+          <Box width="100%" py="20px" display="flex" alignContent="center" justifyContent="center">
+            <Button
+              color="primary"
+              onClick={() => {
+                setLoading(true);
 
-                  getProgressByStudentId(getLoginToken(), studentId, progresses.length, limit).then(res => {
-                    if(res.ok){
+                getProgressByStudentId(getLoginToken(), studentId, progresses.length, limit).then(
+                  res => {
+                    if (res.ok) {
                       res.json().then(data => {
-                        const oldProgresses = progresses.slice()
+                        const oldProgresses = progresses.slice();
                         const newProgresses = oldProgresses.concat(data.progresses);
                         const count = data.count;
                         setLoadable(newProgresses.length < count);
                         setProgresses(newProgresses);
                         setLoading(false);
-                      })
-                    }
-
-                    else{
+                      });
+                    } else {
                       setLoading(false);
                     }
-                  })
-                }}
-              >
-                MUAT LEBIH BANYAK
-              </Button>
+                  },
+                );
+              }}
+            >
+              MUAT LEBIH BANYAK
+            </Button>
           </Box>
         ) : progresses.length <= 0 ? (
           <Box m="auto">
@@ -195,27 +200,42 @@ export default function Progress(){
         ) : null}
       </Box>
 
-      <Fab color="primary" size="small" className={classes.fab} onClick={()=>{
-        setOpenCreateDialog(true);
-      }}>
-        <AddIcon/>
+      <Fab
+        color="primary"
+        size="small"
+        className={classes.fab}
+        onClick={() => {
+          setOpenCreateDialog(true);
+        }}
+      >
+        <AddIcon />
       </Fab>
 
       {/*Membuat riwayat bacaan*/}
-      <Dialog 
+      <Dialog
         open={openCreateDialog}
-        onClose={()=>{
+        onClose={() => {
           setOpenCreateDialog(false);
         }}
         fullWidth
       >
-        <ProgressDialog 
-          headerTitle={"Tambah Riwayat Bacaan Murid"} 
+        <ProgressDialog
+          headerTitle={"Tambah Riwayat Bacaan Murid"}
           btnTitle={{
             normal: "BUAT",
-            loading: "MEMBUAT..."
+            loading: "MEMBUAT...",
           }}
-          onSubmit={async (type, halAwal, halAkhir, suratAwal, suratAkhir, ayatAwal, ayatAkhir, comment, tanggalUnix) => {
+          onSubmit={async (
+            type,
+            halAwal,
+            halAkhir,
+            suratAwal,
+            suratAkhir,
+            ayatAwal,
+            ayatAkhir,
+            comment,
+            tanggalUnix,
+          ) => {
             return await createProgress(getLoginToken(), studentId, {
               type,
               hal_awal: Number(halAwal),
@@ -225,37 +245,33 @@ export default function Progress(){
               ayat_awal: Number(ayatAwal),
               ayat_akhir: Number(ayatAkhir),
               comment: comment,
-              tanggal: tanggalUnix
+              tanggal: tanggalUnix,
             }).then(res => {
-              if(res.ok){
+              if (res.ok) {
                 setSbMsg("Berhasil menambahkan");
                 setOpenCreateDialog(false);
                 setLoading(true);
                 const limit = progresses.length + 1;
-                setProgresses([])
+                setProgresses([]);
                 getProgressByStudentId(getLoginToken(), studentId, 0, limit).then(res => {
-                  if(res.ok){
+                  if (res.ok) {
                     res.json().then(data => {
                       const count = data.count;
                       const newProgresses = data.progresses;
                       setLoadable(newProgresses.length < count);
-                      setProgresses(newProgresses)
+                      setProgresses(newProgresses);
                       setLoading(false);
-                    })
-                  }
-
-                  else{
+                    });
+                  } else {
                     setLoading(false);
                   }
-                })
+                });
                 return true;
-              }
-
-              else{
+              } else {
                 setSbMsg("Gagal menambahkan");
                 return false;
               }
-            })
+            });
           }}
         />
       </Dialog>

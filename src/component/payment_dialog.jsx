@@ -1,14 +1,22 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, TextField, Typography } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import { createRef, Fragment, useState } from "react";
 import moment from "moment";
 
-export default function PaymentDialog(props){
+export default function PaymentDialog(props) {
   const headerTitle = props.headerTitle;
   const defaultAmount = props.defaultAmount;
   const defaultDate = props.defaultDate;
   const onSubmit = props.onSubmit;
   const btnTitle = props.btnTitle;
-  
+
   const amountRef = createRef();
   const dateRef = createRef();
 
@@ -24,36 +32,27 @@ export default function PaymentDialog(props){
     setAmountErr(null);
     setDateErr(null);
 
-    if(amount.length <= 0){
+    if (amount.length <= 0) {
       setAmountErr("Tidak boleh kosong");
-    }
-
-    else if(Number(amount) <= 0){
+    } else if (Number(amount) <= 0) {
       setAmountErr("Tidak boleh di bawah 0");
-    }
-
-    else if(date.length <= 0){
-      setDateErr("Tidak boleh kosong")
-    }
-
-    else{
+    } else if (date.length <= 0) {
+      setDateErr("Tidak boleh kosong");
+    } else {
       setLoading(true);
-      const unixDate = moment(date).unix()
+      const unixDate = moment(date).unix();
 
       onSubmit(amount, unixDate).then(res => {
-        if(!res){
-          setLoading(false)
+        if (!res) {
+          setLoading(false);
         }
-      })
+      });
     }
-
-  }
+  };
 
   return (
     <Fragment>
-      <DialogTitle>
-        {headerTitle}
-      </DialogTitle>
+      <DialogTitle>{headerTitle}</DialogTitle>
 
       <DialogContent>
         <TextField
@@ -66,7 +65,7 @@ export default function PaymentDialog(props){
           type="number"
           fullWidth
           onKeyUp={event => {
-            if(event.keyCode === 13){
+            if (event.keyCode === 13) {
               event.preventDefault();
 
               handleSubmit();
@@ -74,11 +73,9 @@ export default function PaymentDialog(props){
           }}
         />
 
-        <Box my="40px"/>
+        <Box my="40px" />
 
-        <Typography gutterBottom>
-          Tanggal Pembayaran: 
-        </Typography>
+        <Typography gutterBottom>Tanggal Pembayaran:</Typography>
 
         <TextField
           inputRef={dateRef}

@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  Box,
-  Typography,
-  Button,
-  TextField,
-  IconButton,
-} from "@material-ui/core";
+import { Box, Typography, Button, TextField, IconButton } from "@material-ui/core";
 import { ArrowBack as ArrowBackIcon } from "@material-ui/icons";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
@@ -38,15 +32,13 @@ export default function ForgetPassword() {
     } else {
       setLoading(true);
 
-      resetPasswordRequest(email).then((res) => {
+      resetPasswordRequest(email).then(res => {
         if (res.status === 500) {
           setErrMsg("Terjadi masalah, mohon coba lagi nanti.");
         } else if (res.status === 404) {
           setErrMsg("Email tidak terdaftar.");
         } else {
-          setSuccMsg(
-            "Silakan cek email anda. Jika tidak ada, coba cek folder spam."
-          );
+          setSuccMsg("Silakan cek email anda. Jika tidak ada, coba cek folder spam.");
         }
 
         setLoading(false);
@@ -78,8 +70,7 @@ export default function ForgetPassword() {
           </Typography>
 
           <Typography align="center" gutterBottom>
-            Anda akan dikirimi email yang berisi tautan untuk mengganti password
-            anda.
+            Anda akan dikirimi email yang berisi tautan untuk mengganti password anda.
           </Typography>
 
           {succMsg ? (
@@ -92,11 +83,7 @@ export default function ForgetPassword() {
             </Box>
           ) : errMsg ? (
             <Box my="20px">
-              <FAlert
-                severity={"error"}
-                title="Permintaan reset password gagal"
-                body={errMsg}
-              />
+              <FAlert severity={"error"} title="Permintaan reset password gagal" body={errMsg} />
             </Box>
           ) : null}
 
@@ -108,7 +95,7 @@ export default function ForgetPassword() {
               inputRef={emailRef}
               error={emailErr}
               helperText={emailErr}
-              onKeyUp={(event) => {
+              onKeyUp={event => {
                 if (event.keyCode === 13) {
                   event.preventDefault();
 

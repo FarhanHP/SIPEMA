@@ -1,21 +1,33 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Dialog, IconButton, makeStyles, Menu, MenuItem, Typography } from "@material-ui/core";
-import {MoreVert as MoreVertIcon} from "@material-ui/icons";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Button,
+  Dialog,
+  IconButton,
+  makeStyles,
+  Menu,
+  MenuItem,
+  Typography,
+} from "@material-ui/core";
+import { MoreVert as MoreVertIcon } from "@material-ui/icons";
 import { Fragment, useState } from "react";
-import {type as typeEnum} from "../enums/progress";
+import { type as typeEnum } from "../enums/progress";
 import moment from "moment";
 import { renderBody } from "../utils";
 import { blueGrey } from "@material-ui/core/colors";
 import ProgressDialog from "./progress_dialog";
 
-const useStyles = makeStyles(()=>{
+const useStyles = makeStyles(() => {
   return {
     summary: {
-      backgroundColor: blueGrey[50]
-    }
-  }
-})
+      backgroundColor: blueGrey[50],
+    },
+  };
+});
 
-export default function ProgressAccordion(props){
+export default function ProgressAccordion(props) {
   const classes = useStyles();
 
   const [tanggal, setTanggal] = useState(props.tanggal);
@@ -23,7 +35,7 @@ export default function ProgressAccordion(props){
   const [halAwal, setHalAwal] = useState(props.halAwal);
   const [halAkhir, setHalAkhir] = useState(props.halAkhir);
   const [suratAwal, setSuratAwal] = useState(props.suratAwal);
-  const [suratAkhir, setSuratAkhir] = useState(props.suratAkhir)
+  const [suratAkhir, setSuratAkhir] = useState(props.suratAkhir);
   const [ayatAwal, setAyatAwal] = useState(props.ayatAwal);
   const [ayatAkhir, setAyatAkhir] = useState(props.ayatAkhir);
   const [comment, setComment] = useState(props.comment);
@@ -40,33 +52,34 @@ export default function ProgressAccordion(props){
       <Accordion square variant="outlined">
         <AccordionSummary className={classes.summary}>
           <Box flex={1}>
-            <Typography>
-              {moment.unix(tanggal).format("ll")}
-            </Typography>
+            <Typography>{moment.unix(tanggal).format("ll")}</Typography>
           </Box>
 
           {onDelete && onEdit ? (
             <Box>
-              <IconButton size="small" onClick={(event) => {
-                event.stopPropagation();
-                setAnchorEl(event.currentTarget);
-              }}>
-                <MoreVertIcon/>
+              <IconButton
+                size="small"
+                onClick={event => {
+                  event.stopPropagation();
+                  setAnchorEl(event.currentTarget);
+                }}
+              >
+                <MoreVertIcon />
               </IconButton>
 
-              <Menu 
-                anchorEl={anchorEl} 
-                open={anchorEl} 
-                onClose={(event)=>{
-                  event.stopPropagation()
-                  setAnchorEl(null)
+              <Menu
+                anchorEl={anchorEl}
+                open={anchorEl}
+                onClose={event => {
+                  event.stopPropagation();
+                  setAnchorEl(null);
                 }}
-                onClick={(event)=>{
-                  event.stopPropagation()
+                onClick={event => {
+                  event.stopPropagation();
                 }}
               >
                 <MenuItem
-                  onClick={()=>{
+                  onClick={() => {
                     setOpenDialog(true);
                     setAnchorEl(null);
                   }}
@@ -74,15 +87,19 @@ export default function ProgressAccordion(props){
                   Edit
                 </MenuItem>
 
-                <MenuItem component={Button} disabled={deleting} onClick={()=>{
-                  setDeleting(true);
+                <MenuItem
+                  component={Button}
+                  disabled={deleting}
+                  onClick={() => {
+                    setDeleting(true);
 
-                  onDelete().then(res => {
-                    if(!res){
-                      setDeleting(false)
-                    }
-                  })
-                }}>
+                    onDelete().then(res => {
+                      if (!res) {
+                        setDeleting(false);
+                      }
+                    });
+                  }}
+                >
                   {deleting ? "MENGHAPUS..." : "HAPUS"}
                 </MenuItem>
               </Menu>
@@ -93,35 +110,52 @@ export default function ProgressAccordion(props){
         <AccordionDetails>
           <Box>
             <Typography gutterBottom>
-              {type === typeEnum.IQRA ? (
-                `Iqra, ${halAwal} - ${halAkhir}`
-              ) : (
-                `Quran, ${suratAwal}(${ayatAwal}) - ${suratAkhir}(${ayatAkhir})`
-              )}
+              {type === typeEnum.IQRA
+                ? `Iqra, ${halAwal} - ${halAkhir}`
+                : `Quran, ${suratAwal}(${ayatAwal}) - ${suratAkhir}(${ayatAkhir})`}
             </Typography>
 
-            <Typography>
-              Komentar: 
-            </Typography>
-            <Typography>
-              {comment ? renderBody(comment) : "Tidak ada komentar."}
-            </Typography>
+            <Typography>Komentar:</Typography>
+            <Typography>{comment ? renderBody(comment) : "Tidak ada komentar."}</Typography>
           </Box>
         </AccordionDetails>
       </Accordion>
 
-      <Dialog open={openDialog} onClose={()=>{
-        setOpenDialog(false)
-      }}>
+      <Dialog
+        open={openDialog}
+        onClose={() => {
+          setOpenDialog(false);
+        }}
+      >
         <ProgressDialog
           headerTitle="Edit Riwayat Bacaan"
           btnTitle={{
             normal: "EDIT",
-            loading: "MENGEDIT..."
+            loading: "MENGEDIT...",
           }}
-          onSubmit={async (type, halAwal, halAkhir, suratAwal, suratAkhir, ayatAwal, ayatAkhir, comment, tanggal) => {
-            return await onEdit(type, halAwal, halAkhir, suratAwal, suratAkhir, ayatAwal, ayatAkhir, comment, tanggal).then(res => {
-              if(res){
+          onSubmit={async (
+            type,
+            halAwal,
+            halAkhir,
+            suratAwal,
+            suratAkhir,
+            ayatAwal,
+            ayatAkhir,
+            comment,
+            tanggal,
+          ) => {
+            return await onEdit(
+              type,
+              halAwal,
+              halAkhir,
+              suratAwal,
+              suratAkhir,
+              ayatAwal,
+              ayatAkhir,
+              comment,
+              tanggal,
+            ).then(res => {
+              if (res) {
                 setType(type);
                 setHalAwal(halAwal);
                 setHalAkhir(halAkhir);
@@ -135,12 +169,10 @@ export default function ProgressAccordion(props){
                 setOpenDialog(false);
 
                 return true;
-              }
-
-              else{
+              } else {
                 return false;
               }
-            })
+            });
           }}
           defaultType={type}
           defaultHalAwal={halAwal}

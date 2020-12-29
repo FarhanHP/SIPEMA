@@ -1,8 +1,15 @@
 import { createRef, useState, Fragment } from "react";
-import { Box, Button, DialogActions, DialogContent, DialogTitle, TextField } from "@material-ui/core"
+import {
+  Box,
+  Button,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from "@material-ui/core";
 
-export default function AnnouncementDialog(props){
-  const titleRef =  createRef();
+export default function AnnouncementDialog(props) {
+  const titleRef = createRef();
   const descRef = createRef();
   const headerTitle = props.headerTitle;
   const btnName = props.btnName;
@@ -15,7 +22,7 @@ export default function AnnouncementDialog(props){
 
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = ()=>{
+  const handleSubmit = () => {
     setTitleErr(null);
 
     setDescErr(null);
@@ -23,32 +30,26 @@ export default function AnnouncementDialog(props){
     const title = titleRef.current.value;
     const desc = descRef.current.value;
 
-    if(title.length <= 0){
-      setTitleErr("Tidak boleh kosong")
-    }
-
-    else if(desc.length <= 0){
-      setDescErr("Tidak boleh kosong")
-    }
-
-    else{
+    if (title.length <= 0) {
+      setTitleErr("Tidak boleh kosong");
+    } else if (desc.length <= 0) {
+      setDescErr("Tidak boleh kosong");
+    } else {
       setLoading(true);
 
       const res = props.handleSubmit(title, desc);
 
       res.then(value => {
-        if(!value){
-          setLoading(false)
+        if (!value) {
+          setLoading(false);
         }
-      })
+      });
     }
-  }
+  };
 
   return (
     <Fragment>
-      <DialogTitle>
-        {headerTitle}
-      </DialogTitle>
+      <DialogTitle>{headerTitle}</DialogTitle>
 
       <DialogContent>
         <TextField
@@ -61,7 +62,7 @@ export default function AnnouncementDialog(props){
           fullWidth
         />
 
-        <Box my="20px"/>
+        <Box my="20px" />
 
         <TextField
           inputRef={descRef}

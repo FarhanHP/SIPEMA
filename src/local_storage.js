@@ -2,7 +2,7 @@ export const getLoginToken = () => {
   return window.localStorage.getItem("login_token");
 };
 
-export const setLoginToken = (token) => {
+export const setLoginToken = token => {
   window.localStorage.setItem("login_token", token);
 };
 

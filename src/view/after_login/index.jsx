@@ -23,7 +23,7 @@ export default function Main() {
 
   const dispatch = useDispatch();
 
-  const loginUser = useSelector((state) => {
+  const loginUser = useSelector(state => {
     return state.loginUser;
   });
 
@@ -38,9 +38,9 @@ export default function Main() {
       } else {
         setLoading(true);
 
-        getProfile(token).then((res) => {
+        getProfile(token).then(res => {
           if (res.ok) {
-            res.json().then((data) => {
+            res.json().then(data => {
               dispatch(login(data));
 
               setLoading(false);
@@ -65,18 +65,17 @@ export default function Main() {
             <NotApproved />
           </Route>
         );
-      }
-      else{
+      } else {
         routes = [
           <Route path="/">
             <StudentDashboard />
-          </Route>
+          </Route>,
         ];
       }
     } else if (loginUser.role === "teacher") {
       routes = [
         <Route path="/a/:announcementId">
-          <AnnouncementDetail/>
+          <AnnouncementDetail />
         </Route>,
         <Route path="/s/:studentId">
           <StudentDetail />
@@ -105,9 +104,7 @@ export default function Main() {
           <title>SIPEMA</title>
         </Helmet>
 
-        <Switch>
-          {routes}
-        </Switch>
+        <Switch>{routes}</Switch>
       </React.Fragment>
     );
   }

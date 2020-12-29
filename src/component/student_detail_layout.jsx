@@ -4,20 +4,20 @@ import { blueGrey } from "@material-ui/core/colors";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
-const useStyles = makeStyles((theme)=>{
+const useStyles = makeStyles(theme => {
   return {
     header: {
-      backgroundColor: blueGrey[100]
+      backgroundColor: blueGrey[100],
     },
 
     avatar: {
       height: theme.spacing(10),
-      width: theme.spacing(10)
-    }
-  }
-})
+      width: theme.spacing(10),
+    },
+  };
+});
 
-export default function StudentDetailLayout(props){
+export default function StudentDetailLayout(props) {
   const classes = useStyles();
 
   const student = props.student;
@@ -32,7 +32,15 @@ export default function StudentDetailLayout(props){
 
   return (
     <Box component={Paper} elevation={3} overflow="hidden" mb="20px">
-      <Box pt="20px" px="20px" display="flex" width="100%" className={classes.header} mb="20px" flexDirection="column">
+      <Box
+        pt="20px"
+        px="20px"
+        display="flex"
+        width="100%"
+        className={classes.header}
+        mb="20px"
+        flexDirection="column"
+      >
         <Box mx="auto" display="flex" flexDirection="column">
           <Box mb="20px" mx="auto">
             <Avatar src={pp} className={classes.avatar}>
@@ -56,19 +64,19 @@ export default function StudentDetailLayout(props){
             Bergabung pada <b>{moment.unix(created).format("llll")}</b>
           </Typography>
 
-          <Tabs value={location} indicatorColor="primary" centered >
+          <Tabs value={location} indicatorColor="primary" centered>
             {tabs.map(value => {
-              return (
-                <Tab label={value.label} value={value.url} component={Link} to={value.url} />
-              );
+              return <Tab label={value.label} value={value.url} component={Link} to={value.url} />;
             })}
           </Tabs>
         </Box>
       </Box>
 
-      <Box px={{
-        lg: "25%"
-      }}>
+      <Box
+        px={{
+          lg: "25%",
+        }}
+      >
         {props.children}
       </Box>
     </Box>

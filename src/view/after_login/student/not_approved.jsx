@@ -7,7 +7,7 @@ import { logout } from "../../../request/user";
 export default function NotApproved() {
   const token = getLoginToken();
 
-  const loginUser = useSelector((state) => {
+  const loginUser = useSelector(state => {
     return state.loginUser;
   });
 
@@ -42,7 +42,7 @@ export default function NotApproved() {
               onClick={() => {
                 setLoading(true);
 
-                logout(token).then((res) => {
+                logout(token).then(res => {
                   if (res.ok) {
                     deleteLoginToken();
 

@@ -1,14 +1,7 @@
 import { useState } from "react";
-import {
-  Box,
-  Paper,
-  Avatar,
-  makeStyles,
-  Typography,
-  Button,
-} from "@material-ui/core";
+import { Box, Paper, Avatar, makeStyles, Typography, Button } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => {
+const useStyles = makeStyles(theme => {
   return {
     avatar: {
       height: theme.spacing(8),
@@ -36,7 +29,7 @@ export default function UstudentCard(props) {
 
     const res = props.onAcc();
 
-    res.then((value) => {
+    res.then(value => {
       if (!value) {
         setLoading(false);
       }

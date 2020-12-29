@@ -1,16 +1,26 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, InputLabel, MenuItem, Select, TextField } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@material-ui/core";
 import { createRef, Fragment, useState } from "react";
-import {type as typeEnum} from "../../enums/progress"
+import { type as typeEnum } from "../../enums/progress";
 import IqraForm from "./iqra_form";
 import moment from "moment";
 import QuranForm from "./quran_form";
 
-export default function ProgressDialog(props){
+export default function ProgressDialog(props) {
   const headerTitle = props.headerTitle;
   const btnTitle = props.btnTitle;
-  const onSubmit = props.onSubmit
+  const onSubmit = props.onSubmit;
 
-  const defaultType = props.defaultType
+  const defaultType = props.defaultType;
   const defaultHalAwal = props.defaultHalAwal;
   const defaultHalAkhir = props.defaultHalAkhir;
   const defaultSuratAwal = props.defaultSuratAwal;
@@ -19,7 +29,7 @@ export default function ProgressDialog(props){
   const defaultAyatAkhir = props.defaultAyatAkhir;
   const defaultComment = props.defaultComment;
   const defaultTanggal = props.defaultTanggal;
-  
+
   const halAwalRef = createRef();
   const halAkhirRef = createRef();
   const suratAwalRef = createRef();
@@ -39,7 +49,7 @@ export default function ProgressDialog(props){
   const [ayatAkhirErr, setAyatAkhirErr] = useState(null);
   const [tanggalErr, setTanggalErr] = useState(null);
 
-  const handleSubmit = ()=> {
+  const handleSubmit = () => {
     setHalAwalErr(null);
     setHalAkhirErr(null);
     setSuratAwallErr(null);
@@ -59,40 +69,38 @@ export default function ProgressDialog(props){
 
     let isError = false;
 
-    if(type === typeEnum.IQRA){
+    if (type === typeEnum.IQRA) {
       halAwal = halAwalRef.current.value;
       halAkhir = halAkhirRef.current.value;
       const halAwalNumber = Number(halAwal);
       const halAkhirNumber = Number(halAkhir);
 
-      if(halAwal.length <= 0){
+      if (halAwal.length <= 0) {
         setHalAwalErr("Tidak boleh kosong");
         isError = true;
       }
 
-      if(halAkhir.length <= 0){
+      if (halAkhir.length <= 0) {
         setHalAkhirErr("Tidak boleh kosong");
         isError = true;
       }
 
-      if(halAwalNumber < 0){
+      if (halAwalNumber < 0) {
         setHalAwalErr("Tidak boleh negatif");
         isError = true;
       }
 
-      if(halAkhirNumber < 0){
+      if (halAkhirNumber < 0) {
         setHalAkhirErr("Tidak boleh negatif");
         isError = true;
       }
 
-      if(halAwalNumber > halAkhirNumber){
+      if (halAwalNumber > halAkhirNumber) {
         setHalAwalErr("Tidak boleh lebih besar daripada halaman akhir");
         setHalAkhirErr("Tidak boleh lebih kecil daripada halaman awal");
         isError = true;
       }
-    }
-
-    else{
+    } else {
       suratAwal = suratAwalRef.current.value;
       suratAkhir = suratAkhirRef.current.value;
       ayatAwal = ayatAwalRef.current.value;
@@ -100,89 +108,90 @@ export default function ProgressDialog(props){
       const ayatAwalNumber = Number(ayatAwal);
       const ayatAkhirNumber = Number(ayatAkhir);
 
-      if(ayatAwal.length <= 0){
+      if (ayatAwal.length <= 0) {
         setAyatAwalErr("Tidak boleh kosong");
         isError = true;
       }
 
-      if(ayatAkhir.length <= 0){
+      if (ayatAkhir.length <= 0) {
         setAyatAkhirErr("Tidak boleh kosong");
         isError = true;
       }
 
-      if(suratAwal.length <= 0){
+      if (suratAwal.length <= 0) {
         setSuratAwallErr("Tidak boleh kosong");
         isError = true;
       }
 
-      if(suratAkhir.length <= 0){
+      if (suratAkhir.length <= 0) {
         setSuratAkhirErr("Tidak boleh kosong");
         isError = true;
       }
 
-      if(ayatAwalNumber < 0){
+      if (ayatAwalNumber < 0) {
         setAyatAwalErr("Tidak boleh negatif");
         isError = true;
       }
 
-      if(ayatAkhirNumber < 0){
+      if (ayatAkhirNumber < 0) {
         setAyatAkhirErr("Tidak boleh negatif");
         isError = true;
       }
     }
 
-    if(tanggal.length <= 0){
-      setTanggalErr("Tidak boleh kosong")
+    if (tanggal.length <= 0) {
+      setTanggalErr("Tidak boleh kosong");
       isError = true;
     }
 
-    if(!isError){
-      const tanggalUnix = moment(tanggal).unix()
+    if (!isError) {
+      const tanggalUnix = moment(tanggal).unix();
       setLoading(true);
 
-      onSubmit(type, halAwal, halAkhir, suratAwal, suratAkhir, ayatAwal, ayatAkhir, comment, tanggalUnix).then(res => {
-        if(!res){
+      onSubmit(
+        type,
+        halAwal,
+        halAkhir,
+        suratAwal,
+        suratAkhir,
+        ayatAwal,
+        ayatAkhir,
+        comment,
+        tanggalUnix,
+      ).then(res => {
+        if (!res) {
           setLoading(false);
         }
-      })
+      });
     }
-  }
+  };
 
   return (
     <Fragment>
-      <DialogTitle>
-        {headerTitle}
-      </DialogTitle>
+      <DialogTitle>{headerTitle}</DialogTitle>
 
       <DialogContent>
-        <Box mb="20px" width={{
-          xs: "100%",
-          sm: "50%"
-        }}>
-          <InputLabel id="type">
-            Tipe
-          </InputLabel>
+        <Box
+          mb="20px"
+          width={{
+            xs: "100%",
+            sm: "50%",
+          }}
+        >
+          <InputLabel id="type">Tipe</InputLabel>
 
           <Select
             value={type}
-            onChange={(event)=>{
-              setType(event.target.value)
+            onChange={event => {
+              setType(event.target.value);
             }}
             fullWidth
             id="type"
             disabled={loading}
           >
-            <MenuItem
-              value={typeEnum.IQRA}
-            >
-              Iqra
-            </MenuItem>
+            <MenuItem value={typeEnum.IQRA}>Iqra</MenuItem>
 
-            <MenuItem
-              value={typeEnum.QURAN}
-            >
-              Quran
-            </MenuItem>
+            <MenuItem value={typeEnum.QURAN}>Quran</MenuItem>
           </Select>
         </Box>
 
@@ -197,7 +206,7 @@ export default function ProgressDialog(props){
             disabled={loading}
           />
         ) : type === typeEnum.QURAN ? (
-          <QuranForm 
+          <QuranForm
             disabled={loading}
             defaultSuratAwal={defaultSuratAwal}
             defaultSuratAkhir={defaultSuratAkhir}
@@ -227,9 +236,7 @@ export default function ProgressDialog(props){
         </Box>
 
         <Box my="20px">
-          <InputLabel id="type">
-            Tanggal Baca
-          </InputLabel>
+          <InputLabel id="type">Tanggal Baca</InputLabel>
 
           <TextField
             inputRef={tanggalRef}

@@ -2,7 +2,7 @@ import { Box, Grid, TextField } from "@material-ui/core";
 import { Fragment } from "react";
 import TextDivider from "../text_divider";
 
-export default function QuranForm(props){
+export default function QuranForm(props) {
   const disabled = props.disabled;
   const defaultSuratAwal = props.defaultSuratAwal;
   const defaultSuratAkhir = props.defaultSuratAkhir;
@@ -22,13 +22,13 @@ export default function QuranForm(props){
   return (
     <Fragment>
       <Box my="20px">
-        <TextDivider text="Awal"/>
+        <TextDivider text="Awal" />
       </Box>
 
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
-          <TextField 
-            label="Surat" 
+          <TextField
+            label="Surat"
             placeholder="Masukan surat awal..."
             inputRef={suratAwalRef}
             error={suratAwalErr}
@@ -40,8 +40,8 @@ export default function QuranForm(props){
         </Grid>
 
         <Grid item xs={12} sm={6}>
-          <TextField 
-            label="Ayat" 
+          <TextField
+            label="Ayat"
             placeholder="Masukan ayat awal..."
             inputRef={ayatAwalRef}
             error={ayatAwalErr}
@@ -54,13 +54,13 @@ export default function QuranForm(props){
       </Grid>
 
       <Box my="20px">
-        <TextDivider text="Akhir"/>
+        <TextDivider text="Akhir" />
       </Box>
 
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
-          <TextField 
-            label="Surat" 
+          <TextField
+            label="Surat"
             placeholder="Masukan surat akhir..."
             inputRef={suratAkhirRef}
             error={suratAkhirErr}
@@ -72,8 +72,8 @@ export default function QuranForm(props){
         </Grid>
 
         <Grid item xs={12} sm={6}>
-          <TextField 
-            label="Ayat" 
+          <TextField
+            label="Ayat"
             placeholder="Masukan ayat akhir..."
             inputRef={ayatAkhirRef}
             error={ayatAkhirErr}

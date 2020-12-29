@@ -12,20 +12,20 @@ import { renderPrice } from "../../../utils";
 import moment from "moment";
 import { Link } from "react-router-dom";
 
-const useStyles = makeStyles(()=>{
+const useStyles = makeStyles(() => {
   return {
     paymentSum: {
-      backgroundColor: blueGrey[100]
+      backgroundColor: blueGrey[100],
     },
-    greyColor:{
-      color: "grey"
+    greyColor: {
+      color: "grey",
     },
     link: {
       color: "black",
-      textDecoration: "none"
-    }
-  }
-})
+      textDecoration: "none",
+    },
+  };
+});
 
 export default function StudentPayment() {
   const classes = useStyles();
@@ -41,31 +41,29 @@ export default function StudentPayment() {
   const [loadable, setLoadable] = useState(false);
 
   const loadingElement = [];
-  for(let i=0; i<limit; i++){
+  for (let i = 0; i < limit; i++) {
     loadingElement.push(
       <Box mb="20px">
-        <Skeleton variant="rect" height="75px" width="100%"/>
-      </Box>
+        <Skeleton variant="rect" height="75px" width="100%" />
+      </Box>,
     );
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     getPaymentTotal(getLoginToken()).then(res => {
-      if(res.ok){
+      if (res.ok) {
         res.json().then(data => {
           setTotal(data.amount);
 
           setTotalLoading(false);
-        })
+        });
+      } else {
+        setTotalLoading(false);
       }
+    });
 
-      else{
-        setTotalLoading(false)
-      }
-    })
-  
     getAllPayment(getLoginToken(), 0, limit).then(res => {
-      if(res.ok){
+      if (res.ok) {
         res.json().then(data => {
           const newPayments = data.payments;
           const count = data.count;
@@ -75,33 +73,35 @@ export default function StudentPayment() {
           setPayments(newPayments);
 
           setPaymentsLoading(false);
-        })
+        });
+      } else {
+        setPaymentsLoading(false);
       }
+    });
+  }, []);
 
-      else{
-        setPaymentsLoading(false)
-      }
-    })
-  }, [])
-
-  const loginUser = useSelector((state) => {
+  const loginUser = useSelector(state => {
     return state.loginUser;
   });
 
   return (
     <React.Fragment>
       <Main loginUser={loginUser}>
-        <HeaderTitle
-          icon={<MoneyIcon fontSize="large" />}
-          title="Riwayat Pembayaran Murid"
-        />
+        <HeaderTitle icon={<MoneyIcon fontSize="large" />} title="Riwayat Pembayaran Murid" />
 
         <Box mt="20px" mb="50px">
           <Grid container direction="row-reverse" spacing={2}>
             <Grid item xs={12} lg={4}>
-              <Box component={Paper} width="100%" height="150px" elevation={3} className={classes.paymentSum} p="20px">
+              <Box
+                component={Paper}
+                width="100%"
+                height="150px"
+                elevation={3}
+                className={classes.paymentSum}
+                p="20px"
+              >
                 <Typography variant="h6" gutterButtom>
-                  Total: 
+                  Total:
                 </Typography>
 
                 <Typography variant="h6">
@@ -111,7 +111,7 @@ export default function StudentPayment() {
             </Grid>
 
             <Grid item xs={12} lg={8}>
-              {payments.map((value) => {
+              {payments.map(value => {
                 const student = value.student;
                 const fullname = student.fullname;
                 const studentId = student.student_id;
@@ -135,15 +135,17 @@ export default function StudentPayment() {
                 );
               })}
 
-              {paymentsLoading ? loadingElement : loadable ? (
-                <Box 
-                  display="flex" 
+              {paymentsLoading ? (
+                loadingElement
+              ) : loadable ? (
+                <Box
+                  display="flex"
                   justifyContent="center"
-                  onClick={()=>{
+                  onClick={() => {
                     setPaymentsLoading(true);
 
-                    getAllPayment(getLoginToken(), payments.length, limit).then(res=>{
-                      if(res.ok){
+                    getAllPayment(getLoginToken(), payments.length, limit).then(res => {
+                      if (res.ok) {
                         res.json().then(data => {
                           const newPayments = payments.concat(data.payments);
 
@@ -154,13 +156,11 @@ export default function StudentPayment() {
                           setPayments(newPayments);
 
                           setPaymentsLoading(false);
-                        })
-                      }
-
-                      else{
+                        });
+                      } else {
                         setPaymentsLoading(false);
                       }
-                    })
+                    });
                   }}
                 >
                   <Button color="primary">Muat Lebih Banyak</Button>

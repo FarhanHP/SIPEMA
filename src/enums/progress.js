@@ -1,4 +1,4 @@
 export const type = {
   QURAN: 1,
-  IQRA: 0
-}
+  IQRA: 0,
+};

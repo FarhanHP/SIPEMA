@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  List,
-  ListItemText,
-  ListItem,
-  ListItemIcon,
-  makeStyles,
-} from "@material-ui/core";
+import { List, ListItemText, ListItem, ListItemIcon, makeStyles } from "@material-ui/core";
 import {
   AnnouncementOutlined as AnnouncementIcon,
   PeopleOutlined as PeopleIcon,

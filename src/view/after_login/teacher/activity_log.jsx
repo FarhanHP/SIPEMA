@@ -47,7 +47,7 @@ const useStyles = makeStyles(() => {
 export default function ActivityLog() {
   const classes = useStyles();
 
-  const loginUser = useSelector((state) => {
+  const loginUser = useSelector(state => {
     return state.loginUser;
   });
 
@@ -63,14 +63,14 @@ export default function ActivityLog() {
     loadingElement.push(
       <Box my="10px">
         <Skeleton variant="rect" height="60px" width="100%" />
-      </Box>
+      </Box>,
     );
   }
 
   useEffect(() => {
-    getLogs(getLoginToken(), 0, 10).then((res) => {
+    getLogs(getLoginToken(), 0, 10).then(res => {
       if (res.ok) {
-        res.json().then((data) => {
+        res.json().then(data => {
           setLogs(data.logs);
 
           const total = data.total;
@@ -94,10 +94,7 @@ export default function ActivityLog() {
       </Helmet>
 
       <Main loginUser={loginUser}>
-        <HeaderTitle
-          icon={<HistoryIcon fontSize="large" />}
-          title="Log Aktivitas Pengguna"
-        />
+        <HeaderTitle icon={<HistoryIcon fontSize="large" />} title="Log Aktivitas Pengguna" />
 
         <Box
           pl={{
@@ -137,18 +134,11 @@ export default function ActivityLog() {
                     <TimelineSeparator>
                       <TimelineDot />
 
-                      {array.length - 1 === index ? null : (
-                        <TimelineConnector />
-                      )}
+                      {array.length - 1 === index ? null : <TimelineConnector />}
                     </TimelineSeparator>
 
                     <TimelineContent>
-                      <Box
-                        display="flex"
-                        component={Paper}
-                        elevation={3}
-                        p="10px"
-                      >
+                      <Box display="flex" component={Paper} elevation={3} p="10px">
                         <Box width="100%" display="flex">
                           <Box display="flex" alignItems="center" mr="10px">
                             <Avatar src={pp}>{fullname.charAt(0)}</Avatar>
@@ -185,9 +175,9 @@ export default function ActivityLog() {
 
                   const start = logs.length - 1;
 
-                  getLogs(getLoginToken(), start, 10).then((res) => {
+                  getLogs(getLoginToken(), start, 10).then(res => {
                     if (res.ok) {
-                      res.json().then((data) => {
+                      res.json().then(data => {
                         const total = data.total;
 
                         let newLogs = logs.slice();

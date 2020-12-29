@@ -16,7 +16,7 @@ export default function RegisterConfirm() {
   useEffect(() => {
     setLoading(true);
 
-    register(token).then((res) => {
+    register(token).then(res => {
       if (res.status === 500) {
         setErrorMsg("ERROR 500: Terjadi masalah, mohon coba lagi nanti.");
         setLoading(false);
@@ -27,7 +27,7 @@ export default function RegisterConfirm() {
         setErrorMsg("ERROR 403: Token tidak berlaku.");
         setLoading(false);
       } else {
-        res.json().then((data) => {
+        res.json().then(data => {
           setLoginToken(data.token);
 
           window.location.href = "/";

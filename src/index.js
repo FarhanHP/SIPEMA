@@ -7,7 +7,7 @@ import allReducer from "./reducer";
 
 const store = createStore(
   allReducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
 );
 
 ReactDOM.render(
@@ -16,5 +16,5 @@ ReactDOM.render(
       <App />
     </Provider>
   </React.StrictMode>,
-  document.getElementById("root")
+  document.getElementById("root"),
 );
