@@ -3,13 +3,14 @@ import Drawer from "@material-ui/core/Drawer";
 import Toolbar from "@material-ui/core/Toolbar";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import Typography from "@material-ui/core/Typography";
+import ListItemText from "@material-ui/core/ListItemText";
+// import Typography from "@material-ui/core/Typography";
 
 import { NavLink } from "react-router-dom";
 
 export const drawerWidth = 240;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
@@ -32,13 +33,13 @@ const useStyles = makeStyles((theme) => ({
     borderBottomRightRadius: 999,
     "&.active": {
       backgroundColor: theme.palette.grey[100],
-      "& p": {
+      "& span": {
         fontWeight: "500 !important",
-        color: theme.palette.primary.main,
+        color: theme.palette.text.primary,
       },
     },
     "&:hover": {
-      color: theme.palette.primary.main,
+      color: theme.palette.text.primary,
     },
   },
   listItemTypography: {
@@ -65,35 +66,33 @@ const sidebarItems = [
   },
 ];
 
-const Sidebar = () => {
+const Sidebar = props => {
   const classes = useStyles();
+  const { open, onClose, variant } = props;
   return (
     <Drawer
-      variant="permanent"
+      variant={variant}
       className={classes.drawer}
       classes={{
         paper: classes.drawerPaper,
       }}
+      onClose={onClose}
+      open={open}
     >
       <Toolbar />
-      <div className={classes.drawerContainer}>
-        <List disableRipple className={classes.list}>
-          {sidebarItems.map((item, index) => (
-            <ListItem
-              to={item.to}
-              key={index}
-              component={NavLink}
-              className={classes.listItem}
-            >
-              <Typography className={classes.listItemTypography}>
-                {item.text}
-              </Typography>
-            </ListItem>
-          ))}
-        </List>
-      </div>
+      <List>
+        {sidebarItems.map((item, index) => (
+          <ListItem button to={item.to} key={index} component={NavLink} className={classes.listItem}>
+            <ListItemText primary={item.text} />
+          </ListItem>
+        ))}
+      </List>
     </Drawer>
   );
+};
+
+Sidebar.defaultProps = {
+  open: false,
 };
 
 export default Sidebar;
