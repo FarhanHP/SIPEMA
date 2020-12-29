@@ -10,6 +10,9 @@ import ResetPassword from "./view/reset_password";
 import Main from "./view/after_login";
 import moment from "moment";
 import "moment/locale/id";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient();
 
 moment.locale("id");
 
@@ -20,44 +23,45 @@ const theme = createMuiTheme({
     },
   },
 });
-console.log(theme);
 function App() {
   return (
     <React.Fragment>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <BrowserRouter>
-          <Switch>
-            <Route path="/login">
-              <Login />
-            </Route>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <BrowserRouter>
+            <Switch>
+              <Route path="/login">
+                <Login />
+              </Route>
 
-            <Route path="/register/token/:token">
-              <RegisterConfirm />
-            </Route>
+              <Route path="/register/token/:token">
+                <RegisterConfirm />
+              </Route>
 
-            <Route path="/register">
-              <Register />
-            </Route>
+              <Route path="/register">
+                <Register />
+              </Route>
 
-            <Route path="/password/reset/token/:token">
-              <ResetPassword />
-            </Route>
+              <Route path="/password/reset/token/:token">
+                <ResetPassword />
+              </Route>
 
-            <Route path="/password/reset">
-              <ForgetPassword />
-            </Route>
+              <Route path="/password/reset">
+                <ForgetPassword />
+              </Route>
 
-            <Route path="/">
-              <Main />
-            </Route>
+              <Route path="/">
+                <Main />
+              </Route>
 
-            <Route path={"*"}>
-              <Page404 />
-            </Route>
-          </Switch>
-        </BrowserRouter>
-      </ThemeProvider>
+              <Route path={"*"}>
+                <Page404 />
+              </Route>
+            </Switch>
+          </BrowserRouter>
+        </ThemeProvider>
+      </QueryClientProvider>
     </React.Fragment>
   );
 }
