@@ -1,4 +1,4 @@
-## Team D Assignment 3 IMK
+## Team D IMK
 
 - Farhan Herdian P (1313618030)
 
@@ -73,3 +73,18 @@ Mini report phase 1 dapat dilihat di sini: [Link](https://github.com/FarhanHP/Tu
 ## Final Report
 
 Final Report dapat dilihat di sini: [Link](final%20report/Final%20Report%20SIPEMA.pdf)
+
+## Final Project Report
+
+Final Project Report dapat dilihat di sini:
+
+## Deployment Site
+
+Website dapat dilihat di sini: https://sipema.herokuapp.com
+
+- Akun guru:
+email: farhan.pradana232@gmail.com
+password: farhan.pradana232
+
+- akun murid:
+bisa dengan daftar langsung
