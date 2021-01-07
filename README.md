@@ -76,7 +76,7 @@ Final Report dapat dilihat di sini: [Link](final%20report/Final%20Report%20SIPEM
 
 ## Final Project Report
 
-Final Project Report dapat dilihat di sini:
+Final Project Report dapat dilihat di sini: [Link](final%20project%20report/Final%20Project%20Report%20IMK%20Report.pdf)
 
 ## Deployment Site
 
